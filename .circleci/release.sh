@@ -86,8 +86,8 @@ update_index() {
     cp --force .cr-index/index.yaml index.yaml
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
-    echo "here I am"
-    git push $GIT_REPOSITORY_URL gh-pages
+    echo "here I am: $GIT_REPOSITORY_URL""
+    git push "$GIT_REPOSITORY_URL" gh-pages
 }
 
 main
