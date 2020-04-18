@@ -14,7 +14,7 @@ readonly REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 
 main() {
     pushd "$REPO_ROOT" > /dev/null
-
+git tag | xargs git tag -d
     echo "Fetching tags..."
     git fetch --tags
 
@@ -73,11 +73,11 @@ package_chart() {
 }
 
 release_charts() {
-    cr upload -o "$GIT_USERNAME" -r "$GIT_REPO" 
+    cr upload -o "$GIT_USERNAME" -r "$GIT_REPO"
 }
 
 update_index() {
-    cr index -o "$GIT_USERNAME" -r "$GIT_REPO" -c "$CR_INDEX_URL" 
+    cr index -o "$GIT_USERNAME" -r "$GIT_REPO" -c "$CR_INDEX_URL"
 
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
