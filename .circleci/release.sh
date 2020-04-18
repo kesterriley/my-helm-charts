@@ -77,7 +77,7 @@ release_charts() {
 }
 
 update_index() {
-    cr index -o "$GIT_USERNAME" -r "$GIT_REPO" -c "$GIT_REPOSITORY_URL" 
+    cr index -o "$GIT_USERNAME" -r "$GIT_REPO" -c "$CR_INDEX_URL" 
 
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
@@ -86,7 +86,6 @@ update_index() {
     cp --force .cr-index/index.yaml index.yaml
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
-    echo "here I am: $GIT_REPOSITORY_URL"
     git push "$GIT_REPOSITORY_URL" gh-pages
 }
 
