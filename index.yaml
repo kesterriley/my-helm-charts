@@ -13,6 +13,15 @@ entries:
   app2:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-04-18T17:34:19.8605151Z"
+    description: A Helm chart for Kubernetes
+    digest: 61bf00215881e743b40940db8b33cb39dd9190a44e21c24ba05b9c213c480fd1
+    name: app2
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/app2-0.1.10/app2-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-04-18T15:42:36.744314+01:00"
     description: A Helm chart for Kubernetes
     digest: 40da2c67a5e89af5a3e1d91b31e5aa79fd22a394575bb9936a6c517dbd7766a2
