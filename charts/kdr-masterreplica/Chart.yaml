@@ -1,6 +1,6 @@
 apiVersion: v2
 name: kdr-masterreplica
-description: A Helm chart for Kubernetes
+description: A Helm chart for deplying a master and replica MariaDB Datsabase installation
 
 # A chart can be either an 'application' or a 'library' chart.
 #

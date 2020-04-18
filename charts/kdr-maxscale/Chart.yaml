@@ -1,7 +1,7 @@
 apiVersion: v1
 appVersion: 2.2.21
 description: MaxScale Helm Chart
-home: http://github.com/kesterriley/helm-charts
+home: http://github.com/kesterriley/my-helm-charts
 maintainers:
 - email: kesterriley@hotmail.com
   name: Kester Riley

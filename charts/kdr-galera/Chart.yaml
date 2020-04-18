@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kdr-galera
-description: A Helm chart for Kubernetes
-home: http://github.com/kesterriley/helm-charts
+description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
+home: http://github.com/kesterriley/my-helm-charts
 maintainers:
 - email: kesterriley@hotmail.com
   name: Kester Riley
