@@ -14,7 +14,6 @@ readonly REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 
 main() {
     pushd "$REPO_ROOT" > /dev/null
-git tag | xargs git tag -d
     echo "Fetching tags..."
     git fetch --tags
 
