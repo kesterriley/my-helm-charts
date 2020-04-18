@@ -1,0 +1,71 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ include "kdr-galera.fullname" . }}-0
+  #namespace: kdr-galera
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ include "kdr-galera.fullname" . }}
+      podindex: "0"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ include "kdr-galera.fullname" . }}-1
+  #namespace: kdr-galera
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ include "kdr-galera.fullname" . }}
+      podindex: "1"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ include "kdr-galera.fullname" . }}-2
+  #namespace: kdr-galera
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ include "kdr-galera.fullname" . }}
+      podindex: "2"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mariadb-{{ include "kdr-galera.fullname" . }}-pvc
+  #namespace: kdr-galera
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  selector:
+    matchLabels:
+      volume: {{ include "kdr-galera.fullname" . }}-pvc

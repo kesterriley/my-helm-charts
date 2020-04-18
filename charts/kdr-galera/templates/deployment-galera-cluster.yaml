@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "kdr-galera.fullname" . }}
+  labels: {{- include "kdr-galera.labels" . | nindent 4 }}
+  #namespace: kdr-galera
+spec:
+  serviceName: {{ template "kdr-galera.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "kdr-galera.matchLabels" . | nindent 6 }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if (eq "Recreate" .Values.updateStrategy.type) }}
+    rollingUpdate: null
+    {{- end }}
+  template:
+    metadata:
+      {{- if .Values.podAnnotations }}
+      annotations: {{- include "kdr-galera.tplValue" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "kdr-galera.labels" . | nindent 8 }}
+    spec:
+      initContainers:
+        - name: cleanup
+          image: {{ template "kdr-galera.image" . }}
+          command: [ "/bin/bash", "-c", "--" ]
+          args: ["rm -rf /var/lib/mysql/lost+found"]
+          volumeMounts:
+            - name: datadir
+              mountPath: {{ .Values.persistence.mountPath }}
+      initContainers:
+      - name: set-mariadb-parameters
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DOMAIN_ID
+            value: {{ .Values.galera.domainId | quote }}
+          - name: AUTO_INCREMENT_OFFSET
+            value: {{ .Values.galera.autoIncrementOffset | quote }}
+        command: ['sh', '-c', 'ordinal=`hostname | sed -r "s/([^0-9]*([0-9]*)){1}.*/\2/"`; if [ $ordinal = 0 ]; then touch /var/lib/mysql/new-cluster; fi; echo [mysqld] > /mnt/conf.d/server-id.cnf; echo server-id=${DOMAIN_ID:-100} >> /mnt/conf.d/server-id.cnf; echo wsrep_gtid_domain_id=${DOMAIN_ID:-100} >> /mnt/conf.d/server-id.cnf; echo gtid_domain_id=100${DOMAIN_ID:-100}${ordinal} >> /mnt/conf.d/server-id.cnf; echo auto_increment_offset=$((${AUTO_INCREMENT_OFFSET:-0} + $ordinal)) >> /mnt/conf.d/server-id.cnf; cp /mnt/configmap/* /mnt/conf.d;']
+        volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+        - name: config-map
+          mountPath: /mnt/configmap
+        - name: datadir
+          mountPath: {{ .Values.persistence.mountPath }}
+      containers:
+      - name: kdr-galera
+        image: {{ template "kdr-galera.image" . }}
+        env:
+#          - name: TRACE
+#            value: "y"
+          - name: SKIP_UPDATES
+            value: "yes"
+          - name: CLUSTER_NAME
+            value: {{ .Values.galera.name | quote }}
+          - name: LISTEN_WHEN_HEALTHY
+            value: "8082"
+          - name: HEALTHY_WHILE_BOOTING
+            value: "1"
+          - name: DEFAULT_TIME_ZONE
+            value: "+01:00"
+          - name: NODE_ADDRESS
+            value: "eth0"
+          - name: SST_METHOD
+            value: "mariabackup"
+          - name: MARIADB_ROOT_SOCKET_AUTH
+            value: "0"
+#          - name: MARIADB_DATABASE
+#            value: "testdb"
+          - name: MAXSCALE_USER
+            value: "maxscale"
+          - name: MAXSCALE_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MAXSCALE_USER_PASSWORD
+          - name: MAXSCALE_MONITOR_USER
+            value: "maxscale-monitor"
+          - name: MAXSCALE_MONITOR_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MAXSCALE_MONITOR_PASSWORD
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: mariadb-user-password
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: root-password
+          - name: MARIADB_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: mariadb-user
+          - name: MARIABACKUP_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MARIABACKUP_USER
+          - name: MARIABACKUP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MARIABACKUP_PASSWORD
+          - name: SYSTEM_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: root-password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        - containerPort: 3309
+          name: recovery
+        - containerPort: 4444
+          name: sst
+        - containerPort: 4567
+          name: gcom
+        - containerPort: 4568
+          name: gcom2
+        - containerPort: 8080
+          name: hup
+        - containerPort: 8081
+          name: hboot
+        args:
+          - node
+          - {{ template "kdr-galera.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }},{{ template "kdr-galera.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }},{{ template "kdr-galera.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        volumeMounts:
+        - name: datadir
+          mountPath: {{ .Values.persistence.mountPath }}
+        - name: conf
+          mountPath: /etc/my.cnf.d
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: {{ template "kdr-galera.fullname" . }}-configuration
+          items:
+            - path: "docker.cnf"
+              key: docker.cnf
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+      labels:
+          app.kubernetes.io/name: {{ include "kdr-galera.name" . }}
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/managed-by: {{ .Release.Service }}
+    spec:
+      accessModes:
+        {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size | quote }}
+      {{ include "kdr-galera.storageClass" . }}

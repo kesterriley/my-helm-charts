@@ -1,0 +1,289 @@
+# Default values for kdr-galera.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+image:
+  registry: docker.io
+  repository: kesterriley/mdb-test-10-4-server
+  tag: latest
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: Always
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistryKeySecretName
+
+
+galera:
+  name: test-cluster
+  domainId: 200
+  # An incremental number to add to the offset
+  autoIncrementOffset: 0
+
+
+nameOverride: ""
+fullnameOverride: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+podAnnotations: {}
+
+clusterDomain: cluster.local
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3306
+  # clusterIP: None
+  # nodePort: 30001
+  # loadBalancerIP:
+  # loadBalancerSourceRanges:
+  # - 10.10.10.0/24
+  annotations: {}
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+replicaCount: 3
+updateStrategy:
+  type: RollingUpdate
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+persistence:
+  enabled: true
+  mountPath: /var/lib/mysql
+  annotations:
+  accessModes:
+    - ReadWriteOnce
+  size: 15Gi
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "standard"
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+
+
+mariadbConfiguration: |-
+    # Populated from Kubernetes config-map
+    # Kester Riley <kesterriley@hotmail.com>
+    [client]
+    default-character-set = utf8
+    [mysql]
+    default-character-set = utf8
+    [mysqld]
+    collation-server = utf8_unicode_ci
+    init-connect = 'SET NAMES utf8'
+    character-set-server = utf8
+    datadir=/var/lib/mysql
+    bind-address=0.0.0.0
+    binlog_format=ROW
+    default-storage-engine=innodb
+    innodb_autoinc_lock_mode=2
+    innodb_lock_schedule_algorithm=FCFS
+    innodb_flush_log_at_trx_commit=2
+    skip-host-cache
+    skip-name-resolve
+    wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
+    wsrep_provider_options="gcache.size=1024M; gcache.keep_pages_size=1024M; gcache.recover=yes; gcs.fc_factor=0.8;"
+    wsrep_notify_cmd=/usr/local/bin/notify.sh
+    wsrep_gtid_mode=ON
+    log_slave_updates=1
+    log_bin=mariadb-node
+    auto_increment_increment=10
+    wsrep_auto_increment_control=0
+    gtid-ignore-duplicates=ON
+    [sst]
+    sst-syslog=-1
+    progress=/tmp/mysql-console/fifo
+    #inno-apply-opts="--use-memory=2G"
+    #compressor="pigz --fast --processes 4"
+    #decompressor="pigz --decompress"
+    [mysqld_safe]
+    #skip_log_error
+    #syslog
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+## Prometheus exporter configuration
+##
+metrics:
+  enabled: false
+  ## Bitnami MySQL Prometheus exporter image
+  ## ref: https://hub.docker.com/r/bitnami/mysqld-exporter/tags/
+  ##
+  image:
+    registry: docker.io
+    repository: bitnami/mysqld-exporter
+    tag: 0.12.1-debian-10-r10
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ##
+    # pullSecrets:
+    #   - myRegistryKeySecretName
+  ## MySQL Prometheus exporter containers' resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    limits: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+    requests: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+  ## MySQL Prometheus exporter service parameters
+  ##
+  service:
+    type: ClusterIP
+    port: 9104
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9104"
+
+  ## Prometheus Operator ServiceMonitor configuration
+  ##
+  serviceMonitor:
+    enabled: false
+    ## Namespace in which Prometheus is running
+    ##
+    # namespace: monitoring
+
+    ## Interval at which metrics should be scraped.
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ##
+    # interval: 10s
+
+    ## Timeout after which the scrape is ended
+    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+    ##
+    # scrapeTimeout: 10s
+
+    ## ServiceMonitor selector labels
+    ## ref: https://github.com/bitnami/charts/tree/master/bitnami/prometheus-operator#prometheus-configuration
+    ##
+    selector:
+      prometheus: kube-prometheus
+
+
+## Maxscale Configuration
+maxscale:
+  enabled: true
+  passive: true
+  image:
+    registry: docker.io
+    repository: kesterriley/mdb-test-10-4-maxscale
+    tag: latest
+    pullPolicy: Always
+  masterOnlyService:
+    type: NodePort
+    port: 3306
+    name: masteronly
+    targetPort: 3306
+  rwService:
+    type: NodePort
+    port: 3307
+    name: rwsplit
+#    targetPort: 3306
+  replicaCount: 2
+  metrics:
+    enabled: false
+    image:
+      repository: skord/maxscale_exporter
+      tag: latest
+      pullPolicy: IfNotPresent
+    resources: {}
+  serviceUser: maxscale
+  monitorUser: maxscale-monitor
+
+## Not used below here
+
+  resources:
+    limits: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+    requests: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+  serviceMonitor:
+    enabled: false
+    selector:
+      prometheus: kube-prometheus
+  nameOverride: ""
+  fullnameOverride: ""
+
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

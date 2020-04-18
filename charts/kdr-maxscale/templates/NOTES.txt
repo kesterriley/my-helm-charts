@@ -1,0 +1,5 @@
+Maxscale has been deployed and can be accessed by using
+
+    {{ include "kdr-maxscale.fullname" . }}
+
+as the mariadb -h hostname.
