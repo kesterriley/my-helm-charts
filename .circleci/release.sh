@@ -8,6 +8,7 @@ set -o pipefail
 : "${GIT_REPOSITORY_URL:?Environment variable GIT_REPOSITORY_URL must be set}"
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
+: "${GIT_REPO:?Environment variable GIT_REPO must be set}"
 
 readonly REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
 
@@ -72,11 +73,11 @@ package_chart() {
 }
 
 release_charts() {
-    cr upload -o codecentric -r helm-charts
+    cr upload -o $GIT_USERNAME -r $GIT_REPO 
 }
 
 update_index() {
-    cr index -o codecentric -r helm-charts -c https://codecentric.github.io/helm-charts
+    cr index -o $GIT_USERNAME -r $GIT_REPO -c $GIT_REPOSITORY_URL 
 
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
