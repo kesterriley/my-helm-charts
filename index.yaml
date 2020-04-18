@@ -1,0 +1,23 @@
+apiVersion: v1
+entries:
+  app1:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-04-18T15:42:36.537082+01:00"
+    description: A Helm chart for Kubernetes
+    digest: 9f190fa23532eacd4ad41964723730fb8863320b7df8c6efe83886618587c51a
+    name: app1
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/app1-0.1.0/app1-0.1.0.tgz
+    version: 0.1.0
+  app2:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-04-18T15:42:36.744314+01:00"
+    description: A Helm chart for Kubernetes
+    digest: 40da2c67a5e89af5a3e1d91b31e5aa79fd22a394575bb9936a6c517dbd7766a2
+    name: app2
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/app2-0.1.0/app2-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-04-18T15:42:36.141436+01:00"
