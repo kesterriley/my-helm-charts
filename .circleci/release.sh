@@ -73,11 +73,11 @@ package_chart() {
 }
 
 release_charts() {
-    cr upload -o $GIT_USERNAME -r $GIT_REPO 
+    cr upload -o "$GIT_USERNAME" -r "$GIT_REPO" 
 }
 
 update_index() {
-    cr index -o $GIT_USERNAME -r $GIT_REPO -c $GIT_REPOSITORY_URL 
+    cr index -o "$GIT_USERNAME" -r "$GIT_REPO" -c "$GIT_REPOSITORY_URL" 
 
     git config user.email "$GIT_EMAIL"
     git config user.name "$GIT_USERNAME"
