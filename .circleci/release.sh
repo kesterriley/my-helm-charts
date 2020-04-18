@@ -87,7 +87,7 @@ update_index() {
     git add index.yaml
     git commit --message="Update index.yaml" --signoff
     echo "here I am"
-    git push $GIT_REPO gh-pages
+    git push $GIT_REPOSITORY_URL gh-pages
 }
 
 main
