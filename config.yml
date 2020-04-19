@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  install-charts:
+workflows:
+  version: 2
+  ignore-ghpages:
+    jobs:
+      - install-charts:
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /.*/
