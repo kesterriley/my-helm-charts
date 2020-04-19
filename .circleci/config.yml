@@ -45,7 +45,12 @@ workflows:
   version: 2
   lint-and-test:
     jobs:
-      - lint-scripts
+      - lint-scripts:
+          filters:
+            branches:
+              ignore: master
+            tags:
+              ignore: /.*/
       - lint-charts:
           filters:
             branches:
