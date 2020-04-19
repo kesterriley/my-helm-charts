@@ -29,4 +29,43 @@ entries:
     urls:
     - https://github.com/kesterriley/my-helm-charts/releases/download/app2-0.1.0/app2-0.1.0.tgz
     version: 0.1.0
+  kdr-galera:
+  - apiVersion: v2
+    appVersion: 1.16.1
+    created: "2020-04-19T08:17:56.377189528Z"
+    description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
+    digest: e60cf42262d10678cd9b6bdfc1f32296c779637b285697b1ee1b916f68d8a0b2
+    home: http://github.com/kesterriley/my-helm-charts
+    maintainers:
+    - email: kesterriley@hotmail.com
+      name: Kester Riley
+    name: kdr-galera
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-galera-0.1.7/kdr-galera-0.1.7.tgz
+    version: 0.1.7
+  kdr-masterreplica:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-04-19T08:17:56.509427864Z"
+    description: A Helm chart for deplying a master and replica MariaDB Datsabase
+      installation
+    digest: d601e59fbad55fa982ab05bccb254d6fecd786adfba31cd0501291d0adb49454
+    name: kdr-masterreplica
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-masterreplica-0.1.0/kdr-masterreplica-0.1.0.tgz
+    version: 0.1.0
+  kdr-maxscale:
+  - apiVersion: v1
+    appVersion: 2.2.21
+    created: "2020-04-19T08:17:56.624097145Z"
+    description: MaxScale Helm Chart
+    digest: c6e8d8e1ff9eef079fc58bb862ad2ad5815c728c1b9a6651ecc93ea47d0fb341
+    home: http://github.com/kesterriley/my-helm-charts
+    maintainers:
+    - email: kesterriley@hotmail.com
+      name: Kester Riley
+    name: kdr-maxscale
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-maxscale-0.1.4/kdr-maxscale-0.1.4.tgz
+    version: 0.1.4
 generated: "2020-04-18T15:42:36.141436+01:00"
