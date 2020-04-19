@@ -32,6 +32,19 @@ entries:
   kdr-galera:
   - apiVersion: v2
     appVersion: 1.16.1
+    created: "2020-04-19T09:48:54.944432209Z"
+    description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
+    digest: cb975d8827d86bb6dc978d15482af4f9a85c5020fc0e383781cefe50ddc015e9
+    home: http://github.com/kesterriley/my-helm-charts
+    maintainers:
+    - email: kesterriley@hotmail.com
+      name: Kester Riley
+    name: kdr-galera
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-galera-0.1.15/kdr-galera-0.1.15.tgz
+    version: 0.1.15
+  - apiVersion: v2
+    appVersion: 1.16.1
     created: "2020-04-19T09:21:22.793243131Z"
     description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
     digest: eccd45e45d5b7a06a9ceee2a7316d3e5edabef0850c590c86ae2e843be1c6394
