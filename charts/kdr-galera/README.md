@@ -42,17 +42,6 @@ helm install usdc kdr-galera --set galera.domainId=200 --set galera.autoIncremen
 helm install eudc kdr-galera --set galera.domainId=300 --set galera.autoIncrementOffset=7 --namespace=eu
 
 
-CLEAR UP SEED NODES:
-
-kubectl delete deployment usdc-kdr-galera-seed -n us
-kubectl delete deployment ukdc-kdr-galera-seed -n uk
-kubectl delete deployment eudc-kdr-galera-seed -n eu
-
-kubectl delete svc usdc-kdr-galera-seed -n us
-kubectl delete svc ukdc-kdr-galera-seed -n uk
-kubectl delete svc eudc-kdr-galera-seed -n eu
-
-
 ON THE UK SERVER:
 
 kubectl exec -it ukdc-kdr-galera-0 -n uk -- /bin/bash

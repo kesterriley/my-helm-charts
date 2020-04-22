@@ -16,14 +16,6 @@ https://tech.paulcz.net/blog/creating-a-helm-chart-monorepo-part-1/
 TO RELEASE you must update tag number in the chart.yaml
 
 
-To build:
-cd /Users/kester/src/github.com/kesterriley/helm-charts
-rm -rf *.tgz
-helm package charts/{kdr-maxscale,kdr-galera}
-rm -rf index.yaml
-helm repo index --url https://kesterriley.github.io/helm-charts/ .
-git add .; git commit -m "Update to helm files";  git push origin master
-
 
 To search repo:
 
@@ -35,7 +27,7 @@ helm repo update
 
 To add repo:
 
-helm repo add kesterriley-repo https://kesterriley.github.io/helm-charts/
+helm repo add kesterriley-repo https://kesterriley.github.io/my-helm-charts/
 
 
 To remove repo:

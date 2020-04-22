@@ -2,7 +2,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-metadata:
   name: {{ include "kdr-galera.fullname" . }}-maxscale-passive
   labels: {{- include "kdr-galera.labels" . | nindent 4 }}
 spec:
@@ -67,6 +66,10 @@ spec:
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}
             - name: {{ .Values.maxscale.rwService.name }}
               containerPort: {{ .Values.maxscale.rwService.port }}
+          volumeMounts:
+          - name: "config"
+            mountPath: "/etc/maxscale.cnf"
+            subPath: "maxscale.cnf"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.maxscale.masterOnlyService.name }}
@@ -93,3 +96,7 @@ spec:
     {{- end }}
       restartPolicy: {{ .Values.maxscale.restartPolicy }}
 {{- end }}
+      volumes:
+        - name: "config"
+          configMap:
+            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration

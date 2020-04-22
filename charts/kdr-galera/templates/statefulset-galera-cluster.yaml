@@ -23,8 +23,9 @@ spec:
     spec:
       initContainers:
         - name: cleanup
-          image: {{ template "kdr-galera.image" . }}
-          command: [ "/bin/bash", "-c", "--" ]
+          image: busybox
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "sh", "-c", "--" ]
           args: ["rm -rf /var/lib/mysql/lost+found"]
           volumeMounts:
             - name: datadir
@@ -32,7 +33,7 @@ spec:
       initContainers:
       - name: set-mariadb-parameters
         image: busybox
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: DOMAIN_ID
             value: {{ .Values.galera.domainId | quote }}
@@ -49,6 +50,7 @@ spec:
       containers:
       - name: kdr-galera
         image: {{ template "kdr-galera.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
 #          - name: TRACE
 #            value: "y"

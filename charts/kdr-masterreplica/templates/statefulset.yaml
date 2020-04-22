@@ -1,81 +1,97 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mariadb
+  name: {{ template "kdr-masterreplica.fullname" . }}
+  labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
 spec:
   selector:
-    matchLabels:
-      app: mariadb
-  serviceName: mariadb
+    matchLabels: {{- include "kdr-masterreplica.matchLabels" . | nindent 6 }}
   replicas: 3
+  serviceName: {{ template "kdr-masterreplica.fullname" . }}
   template:
     metadata:
-      labels:
-        app: mariadb
+      {{- if .Values.podAnnotations }}
+      annotations: {{- include "kdr-masterreplica.tplValue" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "kdr-masterreplica.labels" . | nindent 8 }}
     spec:
       initContainers:
-      - name: init-mysql
-        image: mysql:5.7
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          # Generate mysql server-id from pod ordinal index.
-          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          echo [mysqld] > /mnt/conf.d/server-id.cnf
-          # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy appropriate conf.d files from config-map to emptyDir.
-          if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/master.cnf /mnt/conf.d/
-          else
-            cp /mnt/config-map/slave.cnf /mnt/conf.d/
-          fi
+      - name: init-mariadb
+        image: busybox
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ['sh', '-c', 'ordinal=`hostname | sed -r "s/([^0-9]*([0-9]*)){1}.*/\2/"`; echo [mysqld] > /mnt/conf.d/server-id.cnf;           echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf; echo "log-basename=`hostname`" >> /mnt/conf.d/server-id.cnf;cp /mnt/configmap/* /mnt/conf.d;']
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
         - name: config-map
-          mountPath: /mnt/config-map
-      - name: clone-mariadb
-        image: gcr.io/google-samples/xtrabackup:1.0
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          # Skip the clone if data already exists.
-          [[ -d /var/lib/mysql/mysql ]] && exit 0
-          # Skip the clone on master (ordinal index 0).
-          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          [[ $ordinal -eq 0 ]] && exit 0
-          # Clone data from previous peer.
-          ncat --recv-only mariadb-$(($ordinal-1)).mariadb 3307 | xbstream -x -C /var/lib/mysql
-          # Prepare the backup.
-          xtrabackup --prepare --target-dir=/var/lib/mysql
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-          subPath: mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
+          mountPath: /mnt/configmap
       containers:
       - name: mariadb
-        image: mysql:5.7
+        image: {{ template "kdr-masterreplica.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        - name: MYSQL_ALLOW_EMPTY_PASSWORD
-          value: "1"
+#        - name: TRACE
+#          value: "y"
+        - name: SKIP_TZINFO
+          value: "y"
+        - name: MAXSCALE_USER
+          value: "maxscale"
+        - name: MASTERHOST
+          value: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+        - name: BACKUPSTREAM
+          value: {{ include "kdr-masterreplica.fullname" . }}-{{ .Values.mariabackup.backupServiceService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+        - name: MAXSCALE_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MAXSCALE_USER_PASSWORD
+        - name: MAXSCALE_MONITOR_USER
+          value: "maxscale-monitor"
+        - name: MAXSCALE_MONITOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MAXSCALE_MONITOR_PASSWORD
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: mariadb-user-password
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: root-password
+        - name: MARIADB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: mariadb-user
+        - name: MARIABACKUP_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MARIABACKUP_USER
+        - name: MARIABACKUP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MARIABACKUP_PASSWORD
+        - name: SYSTEM_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: root-password
+        args:
+          - no-galera
         ports:
         - name: mariadb
           containerPort: 3306
         volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-          subPath: mysql
+        - name: datadir
+          mountPath: {{ .Values.persistence.mountPath }}
         - name: conf
-          mountPath: /etc/mysql/conf.d
+          mountPath: /etc/my.cnf.d
         resources:
           requests:
             cpu: 500m
@@ -89,85 +105,32 @@ spec:
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
-          initialDelaySeconds: 5
+            command: ["mariadb", "-umariadb", "-pmariadb", "-h127.0.0.1", "-e", "SELECT 1"]
+          initialDelaySeconds: 30
           periodSeconds: 2
           timeoutSeconds: 1
-      - name: xtrabackup
-        image: gcr.io/google-samples/xtrabackup:1.0
-        ports:
-        - name: xtrabackup
-          containerPort: 3307
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          cd /var/lib/mysql
-          echo "A"
-          # Determine binlog position of cloned data, if any.
-          if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
-          echo "B"
-
-            # XtraBackup already generated a partial "CHANGE MASTER TO" query
-            # because we're cloning from an existing slave. (Need to remove the tailing semicolon!)
-            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
-            # Ignore xtrabackup_binlog_info in this case (it's useless).
-            rm -f xtrabackup_slave_info xtrabackup_binlog_info
-          elif [[ -f xtrabackup_binlog_info ]]; then
-          echo "C"
-
-            # We're cloning directly from master. Parse binlog position.
-            [[ `cat xtrabackup_binlog_info` =~ ^(.*?)[[:space:]]+(.*?)$ ]] || exit 1
-            rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE='${BASH_REMATCH[1]}',\
-                  MASTER_LOG_POS=${BASH_REMATCH[2]}" > change_master_to.sql.in
-          fi
-
-          # Check if we need to complete a clone by starting replication.
-          if [[ -f change_master_to.sql.in ]]; then
-          echo "D"
-
-            echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -h 127.0.0.1 -e "SELECT 1"; do sleep 1; done
-
-            echo "Initializing replication from clone position"
-            mysql -h 127.0.0.1 \
-                  -e "$(<change_master_to.sql.in), \
-                          MASTER_HOST='mariadb-0.mariadb', \
-                          MASTER_USER='root', \
-                          MASTER_PASSWORD='', \
-                          MASTER_CONNECT_RETRY=10; \
-                        START SLAVE;" || exit 1
-            # In case of container restart, attempt this at-most-once.
-            mv change_master_to.sql.in change_master_to.sql.orig
-          fi
-          echo "E"
-
-          # Start a server to send backups when requested by peers.
-          exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
-            "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-          subPath: mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
       volumes:
       - name: conf
         emptyDir: {}
       - name: config-map
         configMap:
-          name: mariadb
+          name: {{ template "kdr-masterreplica.fullname" . }}-configuration
+          items:
+            - path: "docker.cnf"
+              key: docker.cnf
   volumeClaimTemplates:
   - metadata:
-      name: data
+      name: datadir
+      labels:
+          app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
-      accessModes: ["ReadWriteOnce"]
+      accessModes:
+        {{- range .Values.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
       resources:
         requests:
-          storage: 10Gi
+          storage: {{ .Values.persistence.size | quote }}
+      {{ include "kdr-masterreplica.storageClass" . }}

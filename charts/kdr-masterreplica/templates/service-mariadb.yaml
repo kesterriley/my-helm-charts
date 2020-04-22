@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kdr-masterreplica.fullname" . }}-0
+  #namespace: kdr-masterreplica
+  labels:
+    name: {{ template "kdr-masterreplica.fullname" . }}-0
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  - port: 3307
+    name: recovery
+  type: ClusterIP
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kdr-masterreplica.fullname" . }}-1
+  #namespace: kdr-masterreplica
+  labels:
+    name: {{ template "kdr-masterreplica.fullname" . }}-1
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  - port: 3307
+    name: recovery
+  type: ClusterIP
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kdr-masterreplica.fullname" . }}-2
+  #namespace: kdr-masterreplica
+  labels:
+    name: {{ template "kdr-masterreplica.fullname" . }}-2
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  - port: 3307
+    name: recovery
+  type: ClusterIP
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-2

@@ -13,3 +13,19 @@ data:
 {{ .Values.mariadbConfiguration | indent 4 }}
 {{- end }}
 {{ end }}
+{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfiguration) (not .Values.configurationConfigMap) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration
+  #namespace: kdr-galera
+  labels: {{- include "kdr-galera.labels" . | nindent 4 }}
+data:
+{{- if (.Files.Glob "files/my.cnf") }}
+{{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
+{{- else if .Values.maxscaleConfiguration }}
+  maxscale.cnf: |
+{{ .Values.maxscaleConfiguration | indent 4 }}
+{{- end }}
+{{ end }}

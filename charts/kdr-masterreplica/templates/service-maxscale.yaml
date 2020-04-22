@@ -1,0 +1,39 @@
+{{- if .Values.maxscale.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.maxscale.masterOnlyService.name }}
+  labels:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    helm.sh/chart: {{ include "kdr-masterreplica.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.maxscale.masterOnlyService.type }}
+  ports:
+    - name: {{ .Values.maxscale.masterOnlyService.name }}
+      port: {{ .Values.maxscale.masterOnlyService.port }}
+      targetPort: {{ .Values.maxscale.masterOnlyService.targetPort }}
+  selector:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-maxscale
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.maxscale.rwService.name }}
+  labels:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    helm.sh/chart: {{ include "kdr-masterreplica.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.maxscale.rwService.type }}
+  ports:
+    - name: {{ .Values.maxscale.rwService.name }}
+      port: {{ .Values.maxscale.rwService.port }}
+      targetPort: {{ .Values.maxscale.rwService.targetPort }}
+  selector:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-maxscale
+{{- end }}

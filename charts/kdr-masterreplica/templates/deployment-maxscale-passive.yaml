@@ -1,20 +1,20 @@
-{{- if .Values.maxscale.enabled }}
+{{- if .Values.maxscale.passive }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "kdr-galera.fullname" . }}-maxscale-active
-  labels: {{- include "kdr-galera.labels" . | nindent 4 }}
+  name: {{ include "kdr-masterreplica.fullname" . }}-maxscale-passive
+  labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "kdr-galera.selectorLabels" . | nindent 6 }}-maxscale
+      {{- include "kdr-masterreplica.selectorLabels" . | nindent 6 }}-maxscale
   template:
     metadata:
       labels:
-        {{- include "kdr-galera.selectorLabels" . | nindent 8 }}-maxscale
+        {{- include "kdr-masterreplica.selectorLabels" . | nindent 8 }}-maxscale
       {{- if .Values.podAnnotations }}
-      annotations: {{- include "kdr-galera.tplValue" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+      annotations: {{- include "kdr-masterreplica.tplValue" (dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
       containers:
@@ -33,31 +33,40 @@ spec:
           image: "{{ .Values.maxscale.image.repository }}:{{ .Values.maxscale.image.tag }}"
           imagePullPolicy: {{ .Values.maxscale.image.pullPolicy }}
           env:
+            - name: MAXSCALE_USER
+              value: "maxscale"
+            - name: MAXSCALE_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+                  key: MAXSCALE_USER_PASSWORD 
             - name: MASTER_ONLY_LISTEN_ADDRESS
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS
               value: 0.0.0.0
-            - name: MAX_SERVER
-              value: "Active"
             - name: DB1_ADDRESS
-              value: {{ template "kdr-galera.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB2_ADDRESS
-              value: {{ template "kdr-galera.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB3_ADDRESS
-              value: {{ template "kdr-galera.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: SERVICE_USER
               value: {{ .Values.maxscale.serviceUser }}
             - name: MONITOR_USER
               value: {{ .Values.maxscale.monitorUser }}
+            - name: MAX_PASSIVE
+              value: "true"
+            - name: MAX_SERVER
+              value: "Passive"
             - name: SERVICE_PWD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
                   key: MAXSCALE_USER_PASSWORD
             - name: MONITOR_PWD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
                   key: MAXSCALE_MONITOR_PASSWORD
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
@@ -97,4 +106,4 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration
+            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration

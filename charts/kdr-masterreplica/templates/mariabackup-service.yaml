@@ -1,0 +1,20 @@
+{{- if .Values.mariabackup.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kdr-masterreplica.fullname" . }}-{{ .Values.mariabackup.backupServiceService.name }}
+  labels:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    helm.sh/chart: {{ include "kdr-masterreplica.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.mariabackup.backupServiceService.type }}
+  ports:
+    - name: {{ .Values.mariabackup.backupServiceService.name }}
+      port: {{ .Values.mariabackup.backupServiceService.port }}
+      targetPort: {{ .Values.mariabackup.backupServiceService.targetPort }}
+  selector:
+    app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

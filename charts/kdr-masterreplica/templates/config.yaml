@@ -1,15 +1,31 @@
+{{ if and (or (.Files.Glob "files/my.cnf") .Values.mariadbConfiguration) (not .Values.configurationConfigMap) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mariadb
-  labels:
-    app: mariadb
+  name: {{ template "kdr-masterreplica.fullname" . }}-configuration
+  #namespace: kdr-masterreplica
+  labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
 data:
-  master.cnf: |
-    # Apply this config only on the master.
-    [mysqld]
-    log-bin
-  slave.cnf: |
-    # Apply this config only on slaves.
-    [mysqld]
-    super-read-only
+{{- if (.Files.Glob "files/my.cnf") }}
+{{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
+{{- else if .Values.mariadbConfiguration }}
+  docker.cnf: |
+{{ .Values.mariadbConfiguration | indent 4 }}
+{{- end }}
+{{ end }}
+{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfiguration) (not .Values.configurationConfigMap) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration
+  #namespace: kdr-masterreplica
+  labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
+data:
+{{- if (.Files.Glob "files/my.cnf") }}
+{{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
+{{- else if .Values.maxscaleConfiguration }}
+  maxscale.cnf: |
+{{ .Values.maxscaleConfiguration | indent 4 }}
+{{- end }}
+{{ end }}
