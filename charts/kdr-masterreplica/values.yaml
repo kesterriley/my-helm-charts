@@ -228,9 +228,9 @@ mariabackup:
   enabled: true
   backupServiceService:
     type: NodePort
-    port: 3307
+    port: 3305
     name: backupstream
-    targetPort: 3307
+    targetPort: 3305
 
 ## Maxscale Configuration
 maxscale:

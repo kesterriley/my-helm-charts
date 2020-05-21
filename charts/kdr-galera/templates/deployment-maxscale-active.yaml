@@ -33,6 +33,16 @@ spec:
           image: "{{ .Values.maxscale.image.repository }}:{{ .Values.maxscale.image.tag }}"
           imagePullPolicy: {{ .Values.maxscale.image.pullPolicy }}
           env:
+            - name: CHANGE_MASTER_NAME_1
+              value: {{ .Values.maxscale.changeMaster.name1 }}
+            - name: CHANGE_MASTER_NAME_2
+              value: {{ .Values.maxscale.changeMaster.name2 }}
+            - name: CHANGE_MASTER_HOST_1
+              value: {{ .Values.maxscale.changeMaster.host1 }}
+            - name: CHANGE_MASTER_HOST_2
+              value: {{ .Values.maxscale.changeMaster.host2 }}
+            - name: NOTIFY_EMAIL
+              value: {{ .Values.maxscale.notify.email }}
             - name: MASTER_ONLY_LISTEN_ADDRESS
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS
@@ -49,6 +59,11 @@ spec:
               value: {{ .Values.maxscale.serviceUser }}
             - name: MONITOR_USER
               value: {{ .Values.maxscale.monitorUser }}
+            - name: MAXSCALE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-galera
+                  key: MAXSCALE_USER           
             - name: SERVICE_PWD
               valueFrom:
                 secretKeyRef:

@@ -34,7 +34,10 @@ spec:
           imagePullPolicy: {{ .Values.maxscale.image.pullPolicy }}
           env:
             - name: MAXSCALE_USER
-              value: "maxscale"
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-galera
+                  key: MAXSCALE_USER
             - name: MAXSCALE_USER_PASSWORD
               valueFrom:
                 secretKeyRef:

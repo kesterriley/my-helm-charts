@@ -26,6 +26,16 @@ galera:
   # An incremental number to add to the offset
   autoIncrementOffset: 0
 
+cloneRemote: ""
+remoteMaxscale: ""
+
+mariabackup:
+  enabled: true
+  backupServiceService:
+    type: NodePort
+    port: 3305
+    name: backupstream
+    targetPort: 3305
 
 nameOverride: ""
 fullnameOverride: ""
@@ -134,27 +144,33 @@ mariadbConfiguration: |-
     [mysql]
     default-character-set = utf8
     [mysqld]
-    collation-server = utf8_unicode_ci
-    init-connect = 'SET NAMES utf8'
-    character-set-server = utf8
-    datadir=/var/lib/mysql
+    auto_increment_increment=10
     bind-address=0.0.0.0
     binlog_format=ROW
+    character-set-server = utf8
+    collation-server = utf8_unicode_ci
+    datadir=/var/lib/mysql
     default-storage-engine=innodb
+    gtid-ignore-duplicates=ON
+    init-connect = 'SET NAMES utf8'
     innodb_autoinc_lock_mode=2
-    innodb_lock_schedule_algorithm=FCFS
     innodb_flush_log_at_trx_commit=2
+    innodb_lock_schedule_algorithm=FCFS
+    interactive_timeout=60
+    log_bin=mariadb-node
+    log_slave_updates=1
+    log_error=/var/lib/mysql/mariadb.err
+    max_connections=500
+    max_user_connections=100
     skip-host-cache
     skip-name-resolve
-    wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
-    wsrep_provider_options="gcache.size=1024M; gcache.keep_pages_size=1024M; gcache.recover=yes; gcs.fc_factor=0.8;"
-    wsrep_notify_cmd=/usr/local/bin/notify.sh
-    wsrep_gtid_mode=ON
-    log_slave_updates=1
-    log_bin=mariadb-node
-    auto_increment_increment=10
+    skip-slave-start
+    wait_timeout=60
     wsrep_auto_increment_control=0
-    gtid-ignore-duplicates=ON
+    wsrep_gtid_mode=ON
+    wsrep_notify_cmd=/usr/local/bin/notify.sh
+    wsrep_provider_options="gcache.size=1024M; gcache.keep_pages_size=1024M; gcache.recover=yes; gcs.fc_factor=0.8;"
+    wsrep_provider=/usr/lib64/galera-4/libgalera_smm.so
     [sst]
     sst-syslog=-1
     progress=/tmp/mysql-console/fifo
@@ -238,6 +254,7 @@ maxscaleConfiguration: |-
     backend_connect_timeout=6
     backend_write_timeout=4
     backend_read_timeout=2
+    script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
     ################################
@@ -351,9 +368,19 @@ metrics:
 
 
 ## Maxscale Configuration
+
+# change master script should be a secret for security reasons
+
 maxscale:
   enabled: true
   passive: true
+  notify:
+    email: kester.riley@mariadb.com
+  changeMaster:
+    name1: none
+    name2: none
+    host1: none
+    host2: none
   image:
     registry: docker.io
     repository: kesterriley/mdb-test-10-4-maxscale

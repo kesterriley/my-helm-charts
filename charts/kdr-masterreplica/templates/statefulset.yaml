@@ -32,10 +32,17 @@ spec:
         env:
 #        - name: TRACE
 #          value: "y"
+        {{- if .Values.mariabackup.enabled }}
+        - name: BACKUPSTREAM
+          value: "yes"
+        {{- end }}
         - name: SKIP_TZINFO
           value: "y"
         - name: MAXSCALE_USER
-          value: "maxscale"
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-galera
+              key: MAXSCALE_USER
         - name: MASTERHOST
           value: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
         - name: BACKUPSTREAM

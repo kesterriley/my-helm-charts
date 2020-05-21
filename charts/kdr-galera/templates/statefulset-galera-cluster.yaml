@@ -54,6 +54,14 @@ spec:
         env:
 #          - name: TRACE
 #            value: "y"
+          {{- if .Values.mariabackup.enabled }}
+          - name: BACKUPSTREAM
+            value: "yes"
+          {{- end }}
+          - name: CLONEFROMREMOTE
+            value: {{ .Values.cloneRemote | quote }}
+          - name: MASTERHOST
+            value: {{ .Values.remoteMaxscale | quote }}
           - name: SKIP_UPDATES
             value: "yes"
           - name: CLUSTER_NAME
@@ -72,8 +80,11 @@ spec:
             value: "0"
 #          - name: MARIADB_DATABASE
 #            value: "testdb"
-          - name: MAXSCALE_USER
-            value: "maxscale"
+            - name: MAXSCALE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-galera
+                  key: MAXSCALE_USER
           - name: MAXSCALE_USER_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -118,7 +129,7 @@ spec:
                 key: root-password
         ports:
         - containerPort: 3306
-          name: mysql
+          name: mariadb
         - containerPort: 3309
           name: recovery
         - containerPort: 4444

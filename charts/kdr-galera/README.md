@@ -147,3 +147,54 @@ kubectl delete pod -n uk ukdc-kdr-galera-2
 
 
 helm delete eudc --namespace=eu; helm delete ukdc --namespace=uk; helm delete usdc --namespace=us;
+
+
+
+
+
+
+### COOL STUFF
+
+you could set the CLONEFROMREMOTE variable (pass it on the cli), to build one cluster from another. This will also need the remote maxscale server setting:
+
+helm install ukdc kdr-galera --set galera.domainId=100 --set galera.autoIncrementOffset=1 --namespace=uk
+
+
+helm install usdc kdr-galera --set galera.domainId=200 --set cloneRemote=ukdc-kdr-galera-backupstream.uk.svc.cluster.local  --set remoteMaxscale=ukdc-kdr-galera-masteronly.uk.svc.cluster.local --set galera.autoIncrementOffset=4 --namespace=us
+
+
+helm install eudc kdr-galera --set galera.domainId=300 --set galera.autoIncrementOffset=7 --set cloneRemote=usdc-kdr-galera-backupstream.us.svc.cluster.local  --set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local --namespace=eu
+
+
+
+Once the clusters are up, configure them to work in multiple source replication
+
+kubectl exec -it -n us usdc-kdr-galera-0 -- /usr/local/bin/replication_configuration.sh eudc-kdr-galera-masteronly.eu.svc.cluster.local mariadb mariadb 127.0.0.1 mariadb mariadb
+
+
+kubectl exec -it -n eu eudc-kdr-galera-0 -- /usr/local/bin/replication_configuration.sh ukdc-kdr-galera-masteronly.uk.svc.cluster.local mariadb mariadb 127.0.0.1 mariadb mariadb
+
+
+
+kubectl exec -it -n uk ukdc-kdr-galera-0 -- /usr/local/bin/replication_configuration.sh eudc-kdr-galera-masteronly.eu.svc.cluster.local mariadb mariadb 127.0.0.1 mariadb mariadb
+
+kubectl exec -it -n uk ukdc-kdr-galera-0 -- /usr/local/bin/replication_configuration.sh usdc-kdr-galera-masteronly.us.svc.cluster.local mariadb mariadb 127.0.0.1 mariadb mariadb
+
+
+
+
+to invoke the script for changing master automatically
+
+
+helm install usdc kdr-galera --set galera.domainId=200 --set cloneRemote=ukdc-kdr-galera-backupstream.uk.svc.cluster.local  --set remoteMaxscale=ukdc-kdr-galera-masteronly.uk.svc.cluster.local --set galera.autoIncrementOffset=4 --namespace=us --set maxscale.changeMaster.name1=ustoukauto  --set maxscale.changeMaster.host1=ukdc-kdr-galera-masteronly.uk.svc.cluster.local
+
+
+maxscale:
+  enabled: true
+  passive: true
+  notify:
+    email: kester.riley@mariadb.com
+  changeMaster:
+    name1: none
+    name2: none
+    host1: none

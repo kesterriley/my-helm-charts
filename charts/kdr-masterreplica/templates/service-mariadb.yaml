@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    name: mysql
+    name: mariadb
   - port: 3307
     name: recovery
   type: ClusterIP
@@ -25,7 +25,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    name: mysql
+    name: mariadb
   - port: 3307
     name: recovery
   type: ClusterIP
@@ -42,7 +42,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    name: mysql
+    name: mariadb
   - port: 3307
     name: recovery
   type: ClusterIP

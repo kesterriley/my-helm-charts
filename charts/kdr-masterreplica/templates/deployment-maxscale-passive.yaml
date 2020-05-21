@@ -34,12 +34,15 @@ spec:
           imagePullPolicy: {{ .Values.maxscale.image.pullPolicy }}
           env:
             - name: MAXSCALE_USER
-              value: "maxscale"
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-galera
+                  key: MAXSCALE_USER
             - name: MAXSCALE_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-                  key: MAXSCALE_USER_PASSWORD 
+                  key: MAXSCALE_USER_PASSWORD
             - name: MASTER_ONLY_LISTEN_ADDRESS
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS

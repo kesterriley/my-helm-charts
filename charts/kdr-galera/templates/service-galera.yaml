@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    name: mysql
+    name: mariadb
   - port: 3309
     name: recovery
   - port: 4444
@@ -62,7 +62,7 @@ metadata:
 spec:
   ports:
   - port: 3306
-    name: mysql
+    name: mariadb
   - port: 3309
     name: recovery
   - port: 4444

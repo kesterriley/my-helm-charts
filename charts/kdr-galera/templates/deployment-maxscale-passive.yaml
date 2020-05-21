@@ -33,6 +33,8 @@ spec:
           image: "{{ .Values.maxscale.image.repository }}:{{ .Values.maxscale.image.tag }}"
           imagePullPolicy: {{ .Values.maxscale.image.pullPolicy }}
           env:
+            - name: NOTIFY_EMAIL
+              value: {{ .Values.maxscale.notify.email }}
             - name: MASTER_ONLY_LISTEN_ADDRESS
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS
@@ -51,6 +53,11 @@ spec:
               value: "true"
             - name: MAX_SERVER
               value: "Passive"
+            - name: MAXSCALE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-galera
+                  key: MAXSCALE_USER
             - name: SERVICE_PWD
               valueFrom:
                 secretKeyRef:
