@@ -50,16 +50,9 @@ spec:
               value: {{ .Values.db2Address }}
             - name: DB3_ADDRESS
               value: {{ .Values.db3Address }}
-            - name: SERVICE_USER
-              value: {{ .Values.serviceUser }}
             - name: MONITOR_USER
               value: {{ .Values.monitorUser }}
-            - name: SERVICE_PWD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-maxscale.secretName" . }}
-                  key: service-password
-            - name: MONITOR_PWD
+            - name: MONITOR_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "kdr-maxscale.secretName" . }}

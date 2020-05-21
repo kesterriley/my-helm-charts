@@ -12,8 +12,8 @@ readonly K8S_VERSION=v1.15.0
 run_ct_container() {
     echo 'Running ct container...'
     docker run --rm --interactive --detach --network host --name ct \
-        --volume "$(pwd)/.circleci/ct.yaml:/etc/ct/ct.yaml" \
-        --volume "$(pwd):/workdir" \
+        --volume "$(PASSWORD)/.circleci/ct.yaml:/etc/ct/ct.yaml" \
+        --volume "$(PASSWORD):/workdir" \
         --workdir /workdir \
         "quay.io/helmpack/chart-testing:$CT_VERSION" \
         cat

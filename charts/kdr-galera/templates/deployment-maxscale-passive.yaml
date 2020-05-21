@@ -45,29 +45,72 @@ spec:
               value: {{ template "kdr-galera.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB3_ADDRESS
               value: {{ template "kdr-galera.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
-            - name: SERVICE_USER
-              value: {{ .Values.maxscale.serviceUser }}
             - name: MONITOR_USER
               value: {{ .Values.maxscale.monitorUser }}
             - name: MAX_PASSIVE
               value: "true"
             - name: MAX_SERVER
               value: "Passive"
+            - name: MARIADB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MARIADB_USER
+            - name: MARIADB_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MARIADB_USER_PASSWORD
             - name: MAXSCALE_USER
               valueFrom:
                 secretKeyRef:
-                  name: mariadb-galera
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
                   key: MAXSCALE_USER
-            - name: SERVICE_PWD
+            - name: MAXSCALE_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ template "kdr-galera.fullname" . }}-secrets
                   key: MAXSCALE_USER_PASSWORD
-            - name: MONITOR_PWD
+            - name: MAXSCALE_MONITOR_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ template "kdr-galera.fullname" . }}-secrets
-                  key: MAXSCALE_MONITOR_PASSWORD
+                  key: MAXSCALE_MONITOR_USER
+            - name: MAXSCALE_MONITOR_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MAXSCALE_MONITOR_USER_PASSWORD
+            - name: REPLICATION_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: REPLICATION_USER
+            - name: REPLICATION_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: REPLICATION_USER_PASSWORD
+            - name: MONITOR_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MONITOR_USER_PASSWORD
+            - name: MONITOR_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MONITOR_USER
+            - name: MAXSCALE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MAXSCALE_USER
+            - name: MAXSCALE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kdr-galera.fullname" . }}-secrets
+                  key: MAXSCALE_PASSWORD
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}

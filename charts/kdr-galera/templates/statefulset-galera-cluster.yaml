@@ -80,38 +80,36 @@ spec:
             value: "0"
 #          - name: MARIADB_DATABASE
 #            value: "testdb"
-            - name: MAXSCALE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-galera
-                  key: MAXSCALE_USER
+          - name: MAXSCALE_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MAXSCALE_USER
           - name: MAXSCALE_USER_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
                 key: MAXSCALE_USER_PASSWORD
-          - name: MAXSCALE_MONITOR_USER
-            value: "maxscale-monitor"
-          - name: MAXSCALE_MONITOR_PASSWORD
+          - name: MONITOR_USER_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: MAXSCALE_MONITOR_PASSWORD
-          - name: MARIADB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: mariadb-user-password
-          - name: MARIADB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: root-password
+                key: MONITOR_USER_PASSWORD
           - name: MARIADB_USER
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: mariadb-user
+                key: MARIADB_USER
+          - name:MARIADB_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MARIADB_USER_PASSWORD
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: ROOT_PASSWORD
           - name: MARIABACKUP_USER
             valueFrom:
               secretKeyRef:
@@ -126,7 +124,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: root-password
+                key: ROOT_PASSWORD
         ports:
         - containerPort: 3306
           name: mariadb

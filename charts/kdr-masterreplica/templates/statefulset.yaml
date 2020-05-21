@@ -41,7 +41,7 @@ spec:
         - name: MAXSCALE_USER
           valueFrom:
             secretKeyRef:
-              name: mariadb-galera
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MAXSCALE_USER
         - name: MASTERHOST
           value: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
@@ -52,28 +52,26 @@ spec:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MAXSCALE_USER_PASSWORD
-        - name: MAXSCALE_MONITOR_USER
-          value: "maxscale-monitor"
-        - name: MAXSCALE_MONITOR_PASSWORD
+        - name: MONITOR_USER_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: MAXSCALE_MONITOR_PASSWORD
-        - name: MARIADB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: mariadb-user-password
-        - name: MARIADB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: root-password
+              key: MONITOR_USER_PASSWORD
         - name: MARIADB_USER
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: mariadb-user
+              key: MARIADB_USER
+        - name:MARIADB_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MARIADB_USER_PASSWORD
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: ROOT_PASSWORD
         - name: MARIABACKUP_USER
           valueFrom:
             secretKeyRef:
@@ -88,7 +86,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: root-password
+              key: ROOT_PASSWORD
         args:
           - no-galera
         ports:
