@@ -5,5 +5,5 @@ home: http://github.com/kesterriley/my-helm-charts
 maintainers:
 - email: kesterriley@hotmail.com
   name: Kester Riley
-name: kdr-maxscale
+name: kdr-maxscaleOLD
 version: 0.1.4
