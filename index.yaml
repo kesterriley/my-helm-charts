@@ -32,6 +32,19 @@ entries:
   kdr-galera:
   - apiVersion: v2
     appVersion: 1.16.1
+    created: "2020-05-21T11:42:35.271970886Z"
+    description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
+    digest: 518d92cd43f5ca5ee10f2a7c4521fb20c360565acb24c8518b6926b2a3de7d44
+    home: http://github.com/kesterriley/my-helm-charts
+    maintainers:
+    - email: kesterriley@hotmail.com
+      name: Kester Riley
+    name: kdr-galera
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-galera-0.1.19/kdr-galera-0.1.19.tgz
+    version: 0.1.19
+  - apiVersion: v2
+    appVersion: 1.16.1
     created: "2020-05-21T08:59:14.405140296Z"
     description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
     digest: 4bd343026d648bc6b053418a6c19c8811d2d40b6821023455ff499457d7c81ea
@@ -189,6 +202,15 @@ entries:
   kdr-masterreplica:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-05-21T11:42:35.382361512Z"
+    description: A Helm chart for deplying a master and replica MariaDB Database installation
+    digest: 64d681ed01971b1c5dfd90ed9ef06fe5b322488ee7a52f59d4f0bc55da6f3fab
+    name: kdr-masterreplica
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-masterreplica-0.1.3/kdr-masterreplica-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-05-21T08:59:14.505766932Z"
     description: A Helm chart for deplying a master and replica MariaDB Database installation
     digest: 5d2bc4404700d5a34e4d5e82d3afc6c65861b5d0d79567c45492d310194abb0b
@@ -229,5 +251,19 @@ entries:
     name: kdr-maxscale
     urls:
     - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-maxscale-0.1.4/kdr-maxscale-0.1.4.tgz
+    version: 0.1.4
+  kdr-maxscaleOLD:
+  - apiVersion: v1
+    appVersion: 2.2.21
+    created: "2020-05-21T11:42:35.462524687Z"
+    description: MaxScale Helm Chart
+    digest: 76623a3cd8d5389d8d372f69745898d0f46a6e5bfc90b985cb2fb095749e2690
+    home: http://github.com/kesterriley/my-helm-charts
+    maintainers:
+    - email: kesterriley@hotmail.com
+      name: Kester Riley
+    name: kdr-maxscaleOLD
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-maxscaleOLD-0.1.4/kdr-maxscaleOLD-0.1.4.tgz
     version: 0.1.4
 generated: "2020-04-18T15:42:36.141436+01:00"
