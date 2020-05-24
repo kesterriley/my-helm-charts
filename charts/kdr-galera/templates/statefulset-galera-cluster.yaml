@@ -66,10 +66,6 @@ spec:
             value: "yes"
           - name: CLUSTER_NAME
             value: {{ .Values.galera.name | quote }}
-          - name: LISTEN_WHEN_HEALTHY
-            value: "8082"
-          - name: HEALTHY_WHILE_BOOTING
-            value: "1"
           - name: DEFAULT_TIME_ZONE
             value: "+01:00"
           - name: NODE_ADDRESS
@@ -90,21 +86,36 @@ spec:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
                 key: MAXSCALE_USER_PASSWORD
-          - name: MONITOR_USER_PASSWORD
+          - name: MAXSCALE_MONITOR_USER
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: MONITOR_USER_PASSWORD
+                key: MAXSCALE_MONITOR_USER
+          - name: MAXSCALE_MONITOR_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: MAXSCALE_MONITOR_USER_PASSWORD
           - name: MARIADB_USER
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
                 key: MARIADB_USER
-          - name:MARIADB_USER_PASSWORD
+          - name: MARIADB_USER_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
                 key: MARIADB_USER_PASSWORD
+          - name: REPLICATION_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: REPLICATION_USER
+          - name: REPLICATION_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "kdr-galera.fullname" . }}-secrets
+                key: REPLICATION_USER_PASSWORD
           - name: MARIADB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -115,11 +126,11 @@ spec:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
                 key: MARIABACKUP_USER
-          - name: MARIABACKUP_PASSWORD
+          - name: MARIABACKUP_USER_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "kdr-galera.fullname" . }}-secrets
-                key: MARIABACKUP_PASSWORD
+                key: MARIABACKUP_USER_PASSWORD
           - name: SYSTEM_PASSWORD
             valueFrom:
               secretKeyRef:

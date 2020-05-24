@@ -83,32 +83,10 @@ spec:
               value: {{ template "kdr-masterreplica.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB3_ADDRESS
               value: {{ template "kdr-masterreplica.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
-            - name: MONITOR_USER
-              value: {{ .Values.maxscale.monitorUser }}
             - name: MAX_PASSIVE
               value: "true"
             - name: MAX_SERVER
               value: "Passive"
-            - name: MONITOR_USER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-                  key: MONITOR_USER_PASSWORD
-            - name: MONITOR_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-                  key: MONITOR_USER
-            - name: MAXSCALE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-                  key: MAXSCALE_USER
-            - name: MAXSCALE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-                  key: MAXSCALE_PASSWORD
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}

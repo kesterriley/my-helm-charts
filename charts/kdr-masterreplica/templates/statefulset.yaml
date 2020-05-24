@@ -52,21 +52,36 @@ spec:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MAXSCALE_USER_PASSWORD
-        - name: MONITOR_USER_PASSWORD
+        - name: MAXSCALE_MONITOR_USER
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: MONITOR_USER_PASSWORD
+              key: MAXSCALE_MONITOR_USER
+        - name: MAXSCALE_MONITOR_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: MAXSCALE_MONITOR_USER_PASSWORD
         - name: MARIADB_USER
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MARIADB_USER
-        - name:MARIADB_USER_PASSWORD
+        - name: MARIADB_USER_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MARIADB_USER_PASSWORD
+        - name: REPLICATION_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: REPLICATION_USER
+        - name: REPLICATION_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kdr-masterreplica.fullname" . }}-secrets
+              key: REPLICATION_USER_PASSWORD
         - name: MARIADB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -77,11 +92,11 @@ spec:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MARIABACKUP_USER
-        - name: MARIABACKUP_PASSWORD
+        - name: MARIABACKUP_USER_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
-              key: MARIABACKUP_PASSWORD
+              key: MARIABACKUP_USER_PASSWORD
         - name: SYSTEM_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -101,19 +116,25 @@ spec:
           requests:
             cpu: 500m
             memory: 1Gi
+        {{- if .Values.livenessProbe.enabled }}
         livenessProbe:
-          exec:
-            command: ["mysqladmin", "ping"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
         readinessProbe:
-          exec:
-            # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mariadb", "-umariadb", "-pmariadb", "-h127.0.0.1", "-e", "SELECT 1"]
-          initialDelaySeconds: 30
-          periodSeconds: 2
-          timeoutSeconds: 1
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
       volumes:
       - name: conf
         emptyDir: {}

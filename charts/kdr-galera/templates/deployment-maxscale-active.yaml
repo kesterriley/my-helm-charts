@@ -95,26 +95,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "kdr-galera.fullname" . }}-secrets
                   key: REPLICATION_USER_PASSWORD
-            - name: MONITOR_USER_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
-                  key: MONITOR_USER_PASSWORD
-            - name: MONITOR_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
-                  key: MONITOR_USER
-            - name: MAXSCALE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
-                  key: MAXSCALE_USER
-            - name: MAXSCALE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "kdr-galera.fullname" . }}-secrets
-                  key: MAXSCALE_PASSWORD
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}
