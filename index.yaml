@@ -215,6 +215,15 @@ entries:
   kdr-masterreplica:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2020-05-26T08:48:49.141207934Z"
+    description: A Helm chart for deplying a master and replica MariaDB Database installation
+    digest: 282db1d8afc4598ca3575f4ee26c0ef5bae7f77f27e7835ede27bef537d585f6
+    name: kdr-masterreplica
+    urls:
+    - https://github.com/kesterriley/my-helm-charts/releases/download/kdr-masterreplica-0.1.5/kdr-masterreplica-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2020-05-24T15:29:16.973576771Z"
     description: A Helm chart for deplying a master and replica MariaDB Database installation
     digest: e6ea7e7ecbac8d74694e6fd1bed4389d9e4e116bedf87ca4f517c8f3665d006c
