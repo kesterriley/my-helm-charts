@@ -3,8 +3,9 @@ name: kdr-galera
 description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
 home: http://github.com/kesterriley/my-helm-charts
 maintainers:
-- email: kesterriley@hotmail.com
-  name: Kester Riley
+  - name: Kester Riley
+    email: kesterriley@hotmail.com
+
 
 # A chart can be either an 'application' or a 'library' chart.
 #
