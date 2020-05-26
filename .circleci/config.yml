@@ -6,18 +6,19 @@ jobs:
     steps:
       - checkout
       - run:
-          command: |
-            shellcheck -x .circleci/install_charts.sh
-            shellcheck -x .circleci/install_tools.sh
-            shellcheck -x .circleci/release.sh
-
+          name: lint
+          command: shellcheck -x .circleci/*.sh
   lint-charts:
     docker:
-      - image: quay.io/helmpack/chart-testing:v2.3.3
+      - image: gcr.io/kubernetes-charts-ci/test-image:v3.3.2
     steps:
       - checkout
       - run:
-          command: ct lint --config .circleci/ct.yaml
+          name: lint
+          command: |
+            git remote add upstream https://github.com/kesterriley/my-helm-charts
+            git fetch upstream master
+            ct lint --config .circleci/ct.yaml
 
   install-charts:
     machine: true
@@ -31,19 +32,17 @@ jobs:
     machine: true
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "e2:f8:a5:1a:c8:21:5d:3e:02:dc:9d:a6:c1:b6:f6:c5"
       - run:
           command: |
             echo "export GIT_REPOSITORY_URL=$CIRCLE_REPOSITORY_URL" >> $BASH_ENV
             echo "export GIT_USERNAME=$CIRCLE_PROJECT_USERNAME" >> $BASH_ENV
+            echo "export GIT_REPOSITORY_NAME=$CIRCLE_PROJECT_REPONAME" >> $BASH_ENV
             .circleci/install_tools.sh
             .circleci/release.sh
 
 workflows:
   version: 2
-  lint-and-test:
+  lint-and-install:
     jobs:
       - lint-scripts
       - lint-charts:
@@ -55,11 +54,7 @@ workflows:
       - install-charts:
           requires:
             - lint-charts
-          filters:
-            branches:
-              ignore: master
-            tags:
-              ignore: /.*/
+
   release:
     jobs:
       - release-charts:
