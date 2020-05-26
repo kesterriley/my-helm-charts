@@ -7,7 +7,7 @@ cd /tmp/charts
 for chart in charts/*; do
   if [ $chart == 'charts/README.md' ]; then continue ; fi
   printf "\nChecking %s\n" "${chart#*/}"
-  helm package ${chart} --destination tmp/charts\n\n
+  helm package ${chart} --destination tmp/charts
 done
 
 git checkout gh-pages
