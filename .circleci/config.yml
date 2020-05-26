@@ -28,10 +28,29 @@ jobs:
           name: lint
           command: ct lint --config test/ct.yaml
 
+  publish:
+    docker:
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
+    steps:
+      - checkout
+      - run:
+          name: publish
+          command: bash -c "`cat bin/package.sh`"
+
 workflows:
   version: 2
-  val-lint:
+  flow:
     jobs:
       - kubeval
       - lint
       - deprek8-check
+      - publish
+      # - publish:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #     requires:
+      #       - kubeval
+      #       - lint
+      #       - deprek8-check
