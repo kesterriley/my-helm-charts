@@ -30,19 +30,12 @@ do
  helm package ${chart} --destination .
 done
 
-
-rm -rf .deploy
-mkdir -p .deploy
-
-helm repo index .deploy --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
 
 git checkout gh-pages
-cp --force .deploy/index.yaml index.yaml
-
-git checkout master
 
 if ! git diff --quiet; then
     git add .
