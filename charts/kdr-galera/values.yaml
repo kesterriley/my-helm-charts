@@ -89,8 +89,6 @@ ingress:
   #      - chart-example.local
 
 replicaCount: 3
-updateStrategy:
-  type: RollingUpdate
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -403,9 +401,6 @@ maxscale:
     resources: {}
   serviceUser: maxscale
   monitorUser: maxscale-monitor
-
-## Not used below here
-
   resources:
     limits: {}
     #   cpu: 0.5
@@ -420,7 +415,6 @@ maxscale:
   nameOverride: ""
   fullnameOverride: ""
 
-  resources: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
