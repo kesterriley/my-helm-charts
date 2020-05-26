@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 git config --global user.email kesterriley@users.noreply.github.com
-git config --global user.name Kester Riley
+git config --global user.name "Kester Riley"
 
 mkdir -p /tmp/charts
 cd /tmp/charts
