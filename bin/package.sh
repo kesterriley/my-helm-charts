@@ -7,7 +7,6 @@ set -o nounset
 set -o pipefail
 
 
-
 : "${REPOSITORY_URL:?Environment variable GIT_REPO_URL must be set}"
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
@@ -20,7 +19,6 @@ cd /tmp/charts
 git clone ${REPOSITORY_URL}
 
 cd /tmp/charts/my-helm-charts
-
 
 for chart in charts/*
 do
@@ -41,22 +39,10 @@ helm repo index .deploy --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIR
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
 
-for file in charts/*/*.md; do
-    if [[ -e $file ]]; then
-        mkdir -p ".deploy/docs/$(dirname "$file")"
-        cp --force "$file" ".deploy/docs/$(dirname "$file")"
-    fi
-done
-
 git checkout gh-pages
 cp --force .deploy/index.yaml index.yaml
 
-if [[ -e ".deploy/docs/charts" ]]; then
-    mkdir -p charts
-    cp --force --recursive .deploy/docs/charts/* charts/
-fi
-
-git checkout master -- README.md
+git checkout master
 
 if ! git diff --quiet; then
     git add .
