@@ -2,12 +2,22 @@ version: 2
 jobs:
   kubeval:
     docker:
-      - image: quay.io/mettle/kubernetes-toolkit:1.17.2
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.2
     steps:
       - checkout
       - run:
           name: kubeval
           command: bash -c "`cat bin/kubeval-each-chart`"
+
+
+  deprek8-check:
+    docker:
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.2
+    steps:
+      - checkout
+      - run:
+          name: verify against deprecated API versions
+          command: bash -c "`cat bin/deprek8s-check`"
 
   lint:
     docker:
@@ -24,3 +34,4 @@ workflows:
     jobs:
       - kubeval
       - lint
+      - deprek8-check
