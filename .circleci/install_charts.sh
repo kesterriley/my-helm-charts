@@ -5,15 +5,15 @@ set -o nounset
 set -o pipefail
 
 readonly CT_VERSION=v2.3.3
-readonly KIND_VERSION=v0.4.0
+readonly KIND_VERSION=0.2.1
 readonly CLUSTER_NAME=chart-testing
-readonly K8S_VERSION=v1.15.0
+readonly K8S_VERSION=v1.14.0
 
 run_ct_container() {
     echo 'Running ct container...'
     docker run --rm --interactive --detach --network host --name ct \
-        --volume "$(PASSWORD)/.circleci/ct.yaml:/etc/ct/ct.yaml" \
-        --volume "$(PASSWORD):/workdir" \
+        --volume "$(pwd)/.circleci/ct.yaml:/etc/ct/ct.yaml" \
+        --volume "$(pwd):/workdir" \
         --workdir /workdir \
         "quay.io/helmpack/chart-testing:$CT_VERSION" \
         cat

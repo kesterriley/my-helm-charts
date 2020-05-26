@@ -3,8 +3,10 @@ name: kdr-galera
 description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
 home: http://github.com/kesterriley/my-helm-charts
 maintainers:
-- email: kesterriley@hotmail.com
-  name: Kester Riley
+  - name: kesterriley
+    email: kesterriley@hotmail.com
+    url: https://github.com/kesterriley
+
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -18,7 +20,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.20
+version: 0.1.21
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
