@@ -32,14 +32,32 @@ do
  helm package ${chart} --destination .
 done
 
-git config user.email "kesterriley@hotmail.com"
-git config user.name "Kester Riley"
+helm repo index .deploy --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+
+
+
+git config user.email "$GIT_EMAIL"
+git config user.name "$GIT_USERNAME"
+
+for file in charts/*/*.md; do
+    if [[ -e $file ]]; then
+        mkdir -p ".deploy/docs/$(dirname "$file")"
+        cp --force "$file" ".deploy/docs/$(dirname "$file")"
+    fi
+done
+
 git checkout gh-pages
-helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+cp --force .deploy/index.yaml index.yaml
+
+if [[ -e ".deploy/docs/charts" ]]; then
+    mkdir -p charts
+    cp --force --recursive .deploy/docs/charts/* charts/
+fi
+
 git checkout master -- README.md
 
 if ! git diff --quiet; then
     git add .
     git commit --message="Update index.yaml" --signoff
-    git push "${REPOSITORY_URL}" gh-pages
+    git push "$GIT_REPOSITORY_URL" gh-pages
 fi
