@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
-git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
+# git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
+# git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
+
+git config --global user.email "kesterriley@users.noreply.github.com"
+git config --global user.name "Kester Riley"
 
 mkdir -p /tmp/charts
 cd /tmp/charts
