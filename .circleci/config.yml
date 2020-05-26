@@ -2,7 +2,7 @@ version: 2
 jobs:
   kubeval:
     docker:
-      - image: quay.io/swade1987/kubernetes-toolkit:1.17.2
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
     steps:
       - checkout
       - run:
@@ -12,7 +12,7 @@ jobs:
 
   deprek8-check:
     docker:
-      - image: quay.io/swade1987/kubernetes-toolkit:1.17.2
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
     steps:
       - checkout
       - run:
