@@ -6,6 +6,11 @@
 git config --global user.email "kesterriley@users.noreply.github.com"
 git config --global user.name "Kester Riley"
 
+
+helm init --client-only
+
+
+
 mkdir -p /tmp/charts
 cd /tmp/charts
 
