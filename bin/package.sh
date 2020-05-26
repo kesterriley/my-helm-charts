@@ -8,7 +8,7 @@ set -o pipefail
 
 
 
-: "${GIT_REPOSITORY_URL:?Environment variable GIT_REPO_URL must be set}"
+: "${REPOSITORY_URL:?Environment variable GIT_REPO_URL must be set}"
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 : "${GIT_REPOSITORY_NAME:?Environment variable GIT_REPOSITORY_NAME must be set}"
@@ -44,5 +44,5 @@ helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PR
 if ! git diff --quiet; then
     git add .
     git commit --message="Update index.yaml" --signoff
-    git push "$GIT_REPOSITORY_URL" gh-pages
+    git push "$REPOSITORY_URL" gh-pages
 fi
