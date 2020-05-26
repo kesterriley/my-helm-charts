@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
-[[ -d /tmp/charts ]] || mkdir /tmp/charts
+[[ -f /tmp/charts ]] && mkdir -p /tmp/charts
 
-for chart in charts/*; do
-  if [ $chart == 'charts/README.md' ]; then continue ; fi
+cd /tmp/charts
+
+for chart in charts/*
+do
+  if [ $chart == 'charts/README.md' ]
+  then
+     continue
+  fi
   printf "\nChecking %s\n" "${chart#*/}"
-  helm package ${chart} --destination /tmp/charts
+  helm package ${chart} --destination tmp/charts\n\n
 done
 
 git checkout gh-pages
