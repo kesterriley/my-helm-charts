@@ -14,8 +14,6 @@ set -o pipefail
 
 helm init --client-only
 
-
-
 mkdir -p /tmp/charts
 cd /tmp/charts
 
@@ -36,12 +34,12 @@ do
  helm package ${chart} --destination .
 done
 
-git config user.email "$GIT_EMAIL"
-git config user.name "$GIT_USERNAME"
+git config user.email "kesterriley@hotmail.com"
+git config user.name "Kester Riley"
 git checkout gh-pages
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 if ! git diff --quiet; then
     git add .
     git commit --message="Update index.yaml" --signoff
-    git push "$REPOSITORY_URL" gh-pages
+    git push "${REPOSITORY_URL}" gh-pages
 fi
