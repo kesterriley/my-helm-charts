@@ -1,0 +1,56 @@
+version: 2
+jobs:
+  kubeval:
+    docker:
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
+    steps:
+      - checkout
+      - run:
+          name: kubeval
+          command: bash -c "`cat bin/kubeval-each-chart`"
+
+
+  deprek8-check:
+    docker:
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
+    steps:
+      - checkout
+      - run:
+          name: verify against deprecated API versions
+          command: bash -c "`cat bin/deprek8s-check`"
+
+  lint:
+    docker:
+      - image: quay.io/helmpack/chart-testing:v3.0.0-rc.1
+    steps:
+      - checkout
+      - run:
+          name: lint
+          command: ct lint --config test/ct.yaml
+
+  publish:
+    docker:
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
+    steps:
+      - checkout
+      - run:
+          name: publish
+          command: bash -c "`cat bin/package.sh`"
+
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - kubeval
+      - lint
+      - deprek8-check
+      - publish
+      # - publish:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #     requires:
+      #       - kubeval
+      #       - lint
+      #       - deprek8-check

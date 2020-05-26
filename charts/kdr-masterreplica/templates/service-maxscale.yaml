@@ -13,7 +13,7 @@ spec:
   ports:
     - name: {{ .Values.maxscale.masterOnlyService.name }}
       port: {{ .Values.maxscale.masterOnlyService.port }}
-      targetPort: {{ .Values.maxscale.masterOnlyService.targetPort }}
+      nodePort: {{ .Values.maxscale.masterOnlyService.targetPort }}
   selector:
     app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}-maxscale
@@ -32,7 +32,7 @@ spec:
   ports:
     - name: {{ .Values.maxscale.rwService.name }}
       port: {{ .Values.maxscale.rwService.port }}
-      targetPort: {{ .Values.maxscale.rwService.targetPort }}
+      nodePort: {{ .Values.maxscale.rwService.targetPort }}
   selector:
     app.kubernetes.io/name: {{ include "kdr-masterreplica.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}-maxscale

@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+set -euo pipefail
+mkdir -p /tmp/charts
+for chart in charts/*; do
+  if [ $chart == 'charts/README.md' ]; then continue ; fi
+  printf "\nChecking %s\n" "${chart#*/}"
+  helm template ${chart}  > /tmp/${chart}.yaml
+  conftest test -p /policies /tmp/${chart}.yaml
+done
