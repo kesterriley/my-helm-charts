@@ -30,13 +30,10 @@ do
  helm package ${chart} --destination .
 done
 
-git config user.email "kesterriley@users.noreply.github.com"
+git config user.email "kesterriley@hotmail.com"
 git config user.name "Kester Riley"
 git checkout gh-pages
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 git add .
 git commit -m "Publish charts"
-
-cat ~/.gitconfig
-
 git push origin gh-pages
