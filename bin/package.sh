@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-[[ -f /tmp/charts ]] && mkdir -p /tmp/charts
+if [[ -f /tmp/charts ]] 
+then
+   mkdir /tmp/charts
+fi 
 
 cd /tmp/charts
 
