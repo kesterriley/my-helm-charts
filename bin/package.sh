@@ -10,6 +10,8 @@ mkdir -p /tmp/charts
 cd /tmp/charts
 
 git clone ${REPOSITORY_URL}
+git checkout ExpertAdvice
+
 cd /tmp/charts/my-helm-charts
 
 for chart in charts/*
