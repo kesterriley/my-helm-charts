@@ -4,6 +4,7 @@
 
 for chart in ../charts/*
 do
+  echo $chart
   if [ $chart == 'charts/README.md' ]
   then
      continue
