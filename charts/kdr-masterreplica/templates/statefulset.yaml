@@ -19,7 +19,7 @@ spec:
       - name: init-mariadb
         image: busybox
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ['sh', '-c', 'ordinal=`hostname | sed -r "s/([^0-9]*([0-9]*)){1}.*/\2/"`; echo [mysqld] > /mnt/conf.d/server-id.cnf;           echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf; echo "log-basename=`hostname`" >> /mnt/conf.d/server-id.cnf;cp /mnt/configmap/* /mnt/conf.d;']
+        command: ['sh', '-c', 'ordinal=`hostname | sed -r "s/([^0-9]*([0-9]*)){1}.*/\2/"`; echo [mysqld] > /mnt/conf.d/server-id.cnf; echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf; echo "log-basename=`hostname`" >> /mnt/conf.d/server-id.cnf;cp /mnt/configmap/* /mnt/conf.d;']
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d

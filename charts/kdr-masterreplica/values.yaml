@@ -8,7 +8,7 @@ image:
   registry: docker.io
   repository: kesterriley/mdb-test-10-4-server
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""

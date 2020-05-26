@@ -19,3 +19,8 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:80
 {{- end }}
+
+To access the Read / Write Split connection : {{ .Values.maxscale.rwService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+To access the Master Only connection: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+To check the status of MaxScale : kubectl exec -it -n {{ .Release.Namespace }} mariadb-kdr-masterreplica-maxscale-active-8f49ddcdd-5gg7m -- maxctrl list servers
