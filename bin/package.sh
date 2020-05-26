@@ -36,6 +36,8 @@ git config user.email "kesterriley@hotmail.com"
 git config user.name "Kester Riley"
 git checkout gh-pages
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+git checkout master -- README.md
+
 if ! git diff --quiet; then
     git add .
     git commit --message="Update index.yaml" --signoff
