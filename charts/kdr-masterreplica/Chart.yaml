@@ -1,6 +1,11 @@
 apiVersion: v2
 name: kdr-masterreplica
 description: A Helm chart for deplying a master and replica MariaDB Database installation
+home: http://github.com/kesterriley/my-helm-charts
+maintainers:
+  - name: kesterriley
+    email: kesterriley@hotmail.com
+    url: https://github.com/kesterriley
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -14,7 +19,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.5
+version: 0.1.6
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
