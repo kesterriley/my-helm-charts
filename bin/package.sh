@@ -3,8 +3,8 @@
 # git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
 # git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
 
-git config --global user.email "kesterriley@users.noreply.github.com"
-git config --global user.name "Kester Riley"
+git config user.email "kesterriley@users.noreply.github.com"
+git config user.name "Kester Riley"
 
 
 helm init --client-only
@@ -37,4 +37,5 @@ git add .
 git commit -m "Publish charts"
 
 cat ~/.gitconfig
+
 git push origin gh-pages
