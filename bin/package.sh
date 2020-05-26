@@ -3,8 +3,7 @@
 # git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
 # git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
 
-git config user.email "kesterriley@users.noreply.github.com"
-git config user.name "Kester Riley"
+
 
 
 helm init --client-only
@@ -31,6 +30,8 @@ do
  helm package ${chart} --destination .
 done
 
+git config user.email "kesterriley@users.noreply.github.com"
+git config user.name "Kester Riley"
 git checkout gh-pages
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 git add .
