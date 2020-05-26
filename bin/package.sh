@@ -21,8 +21,6 @@ git clone ${REPOSITORY_URL}
 
 cd /tmp/charts/my-helm-charts
 
-git checkout ExpertAdvice
-
 
 for chart in charts/*
 do
