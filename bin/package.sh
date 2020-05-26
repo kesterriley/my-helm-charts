@@ -32,9 +32,11 @@ do
  helm package ${chart} --destination .
 done
 
+
+rm -rf .deploy
+mkdir -p .deploy
+
 helm repo index .deploy --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-
-
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
