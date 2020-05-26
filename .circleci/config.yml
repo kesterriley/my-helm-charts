@@ -1,5 +1,13 @@
 version: 2
 jobs:
+  kubeval:
+    docker:
+      - image: quay.io/mettle/kubernetes-toolkit:1.17.2
+    steps:
+      - checkout
+      - run:
+          name: kubeval
+          command: bash -c "`cat bin/kubeval-each-chart`"  
   lint-scripts:
     docker:
       - image: quay.io/helmpack/chart-testing:v3.0.0-rc.1
