@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-mkdir -p /tmp/charts
+git config --global user.email kesterriley@users.noreply.github.com
+git config --global user.name Kester Riley
 
+mkdir -p /tmp/charts
 cd /tmp/charts
 
 git clone https://github.com/kesterriley/my-helm-charts.git
