@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git config --global user.email ${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com
+git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
 git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
 
 mkdir -p /tmp/charts
@@ -23,4 +23,6 @@ git checkout gh-pages
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 git add .
 git commit -m "Publish charts"
+
+cat ~/.gitconfig
 git push origin gh-pages
