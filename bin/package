@@ -36,7 +36,7 @@ do
  helm package ${chart} --destination .deploy
 done
 
-helm repo index .deploy # --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 ls -lrt .deploy/*
 
