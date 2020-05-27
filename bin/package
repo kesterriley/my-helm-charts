@@ -23,6 +23,9 @@ git clone ${CIRCLE_REPOSITORY_URL}
 
 cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
+rm -rf .deploy
+mkdir -p .deploy
+
 for chart in charts/*
 do
  if [ $chart == 'charts/README.md' ]
@@ -30,14 +33,17 @@ do
     continue
  fi
  printf "\nChecking %s\n" "${chart#*/}"
- helm package ${chart} --destination .
+ helm package ${chart} --destination .deploy
 done
 
-helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index .deploy/index.yaml --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
 git checkout gh-pages
+
+cp --force .deploy/index.yaml index.yaml
+cp --force .deploy/*.tgz .
 
 git add .
 git commit --message="Update index.yaml" --signoff
