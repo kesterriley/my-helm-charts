@@ -25,6 +25,8 @@ cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
 rm -rf .deploy
 mkdir -p .deploy
+rm -rf *.yaml
+rm -rf *.tgz
 
 for chart in charts/*
 do
