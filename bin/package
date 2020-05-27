@@ -25,6 +25,11 @@ cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
 rm -rf .deploy
 mkdir -p .deploy
+rm -rf *.yaml
+rm -rf *.tgz
+
+pwd
+ls -lrt
 
 for chart in charts/*
 do
@@ -38,12 +43,14 @@ done
 
 helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
+ls -lrt .deploy/*
+
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
 git checkout gh-pages
 
-cp --force .deploy/index.yaml index.yaml
-cp --force .deploy/*.tgz .
+mv .deploy/index.yaml index.yaml
+mv .deploy/*.tgz .
 
 git add .
 git commit --message="Update index.yaml" --signoff
