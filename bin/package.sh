@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# git config --global user.email "${CIRCLE_PROJECT_USERNAME}@users.noreply.github.com"
-# git config --global user.name "${CIRCLE_PROJECT_USERNAME}"
+# Steven Wade <steven@stevenwade.co.uk @swade1987 http://www.stevenwade.co.uk>
+# Kester Riley <kesterriley@hotmail.com>
+
 set -o errexit
 set -o nounset
 set -o pipefail
 
-
-: "${REPOSITORY_URL:?Environment variable GIT_REPO_URL must be set}"
+: "${REPOSITORY_URL:?Environment variable REPOSITORY_URL must be set}"
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 
