@@ -11,15 +11,20 @@ set -o pipefail
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 
+TMP_DIR=/tmp/charts
+
 helm init --client-only
 
-mkdir -p /tmp/charts
-cd /tmp/charts
+mkdir -p ${TMP_DIR}
+cd ${TMP_DIR}
 
+#HTTPS clone
 git clone ${REPOSITORY_URL}
 
-cd /tmp/charts/${CIRCLE_PROJECT_REPONAME}
+# SSH clone
+#git clone ${CIRCLE_REPOSITORY_URL}
 
+cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
 for chart in charts/*
 do
@@ -31,9 +36,7 @@ do
  helm package ${chart} --destination .
 done
 
-
 helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
