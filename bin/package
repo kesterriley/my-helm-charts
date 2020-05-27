@@ -16,12 +16,10 @@ helm init --client-only
 mkdir -p /tmp/charts
 cd /tmp/charts
 
-echo "Cloning from: ${REPOSITORY_URL}"
 git clone ${REPOSITORY_URL}
 
-cd /tmp/charts/my-helm-charts
-echo "A:"
-ls -lrt
+cd /tmp/charts/${CIRCLE_PROJECT_REPONAME}
+
 
 for chart in charts/*
 do
@@ -33,12 +31,8 @@ do
  helm package ${chart} --destination .
 done
 
-echo "B:"
-ls -lrt
-helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-echo "C:"
-ls -lrt
 
+helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 
 git config user.email "$GIT_EMAIL"
