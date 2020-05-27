@@ -16,7 +16,7 @@ helm init --client-only
 mkdir -p /tmp/charts
 cd /tmp/charts
 
-git clone ${REPOSITORY_URL}
+git clone ${CIRCLE_REPOSITORY_URL}
 
 cd /tmp/charts/my-helm-charts
 echo "A:"
@@ -34,7 +34,7 @@ done
 
 echo "B:"
 ls -lrt
-helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 echo "C:"
 ls -lrt
 
