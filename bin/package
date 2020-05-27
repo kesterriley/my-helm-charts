@@ -26,6 +26,9 @@ git clone ${CIRCLE_REPOSITORY_URL}
 
 cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
+rm -rf index.yaml
+rm -rf *.tgz
+
 for chart in charts/*
 do
  if [ $chart == 'charts/README.md' ]
