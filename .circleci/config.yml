@@ -35,7 +35,7 @@ jobs:
       - checkout
       - run:
           name: publish
-          command: bash -c "`cat bin/package.sh`"
+          command: bash -c "`cat bin/package`"
 
 workflows:
   version: 2
