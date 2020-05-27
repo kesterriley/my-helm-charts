@@ -1,4 +1,7 @@
 #! /usr/bin/env bash
+# Steven Wade <steven@stevenwade.co.uk @swade1987 http://www.stevenwade.co.uk>
+# Kester Riley <kesterriley@hotmail.com>
+
 set -euo pipefail
 mkdir -p /tmp/charts
 for chart in charts/*; do
