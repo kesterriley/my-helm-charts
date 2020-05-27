@@ -26,8 +26,10 @@ git clone ${CIRCLE_REPOSITORY_URL}
 
 cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
-rm -rf index.yaml
-rm -rf *.tgz
+git config user.email "$GIT_EMAIL"
+git config user.name "$GIT_USERNAME"
+
+git checkout gh-pages
 
 for chart in charts/*
 do
@@ -39,12 +41,11 @@ do
  helm package ${chart} --destination .
 done
 
+
+
+
+
 helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-
-git config user.email "$GIT_EMAIL"
-git config user.name "$GIT_USERNAME"
-
-git checkout gh-pages
 
 git add .
 git commit --message="Update index.yaml" --signoff
