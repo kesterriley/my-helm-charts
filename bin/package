@@ -36,7 +36,7 @@ do
  helm package ${chart} --destination .deploy
 done
 
-helm repo index .deploy/index.yaml --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
