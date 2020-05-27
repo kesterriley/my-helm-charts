@@ -16,7 +16,8 @@ helm init --client-only
 mkdir -p /tmp/charts
 cd /tmp/charts
 
-git clone ${CIRCLE_REPOSITORY_URL}
+echo "Cloning from: ${REPOSITORY_URL}"
+git clone ${REPOSITORY_URL}
 
 cd /tmp/charts/my-helm-charts
 echo "A:"
