@@ -19,6 +19,8 @@ cd /tmp/charts
 git clone ${REPOSITORY_URL}
 
 cd /tmp/charts/my-helm-charts
+echo "A:"
+ls -lrt
 
 for chart in charts/*
 do
@@ -30,7 +32,13 @@ do
  helm package ${chart} --destination .
 done
 
+echo "B:"
+ls -lrt
 helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+echo "C:"
+ls -lrt
+
+
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
