@@ -260,12 +260,12 @@ maxscale:
     type: NodePort
     port: 3306
     name: masteronly
-    targetPort: 3306
+    nodePort: 303306
   rwService:
     type: NodePort
     port: 3307
     name: rwsplit
-#    targetPort: 3306
+    nodePort: 303307
   replicaCount: 2
   metrics:
     enabled: false
