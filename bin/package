@@ -28,9 +28,6 @@ mkdir -p .deploy
 rm -rf *.yaml
 rm -rf *.tgz
 
-pwd
-ls -lrt
-
 for chart in charts/*
 do
  if [ $chart == 'charts/README.md' ]
@@ -42,8 +39,6 @@ do
 done
 
 helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-
-ls -lrt .deploy/*
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
