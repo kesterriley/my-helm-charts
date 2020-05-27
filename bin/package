@@ -45,8 +45,6 @@ git config user.name "$GIT_USERNAME"
 
 git checkout gh-pages
 
-if ! git diff --quiet; then
-    git add .
-    git commit --message="Update index.yaml" --signoff
-    git push "$GIT_REPOSITORY_URL" gh-pages
-fi
+git add .
+git commit --message="Update index.yaml" --signoff
+git push "$GIT_REPOSITORY_URL" gh-pages
