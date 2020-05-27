@@ -28,6 +28,9 @@ mkdir -p .deploy
 rm -rf *.yaml
 rm -rf *.tgz
 
+pwd
+ls -lrt
+
 for chart in charts/*
 do
  if [ $chart == 'charts/README.md' ]
