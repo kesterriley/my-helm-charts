@@ -19,10 +19,10 @@ mkdir -p ${TMP_DIR}
 cd ${TMP_DIR}
 
 #HTTPS clone
-git clone ${REPOSITORY_URL}
+#git clone ${REPOSITORY_URL}
 
 # SSH clone
-#git clone ${CIRCLE_REPOSITORY_URL}
+git clone ${CIRCLE_REPOSITORY_URL}
 
 cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
