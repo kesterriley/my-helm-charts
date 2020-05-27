@@ -48,5 +48,5 @@ mv .deploy/index.yaml index.yaml
 mv .deploy/*.tgz .
 
 git add .
-git commit --message="Update index.yaml" --signoff
+git commit --message="Publishing latest charts." --signoff
 git push "$REPOSITORY_URL" gh-pages
