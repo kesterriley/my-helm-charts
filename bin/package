@@ -47,4 +47,4 @@ git checkout gh-pages
 
 git add .
 git commit --message="Update index.yaml" --signoff
-git push "$GIT_REPOSITORY_URL" gh-pages
+git push "$REPOSITORY_URL" gh-pages
