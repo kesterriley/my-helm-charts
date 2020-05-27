@@ -11,14 +11,20 @@ set -o pipefail
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 
+TMP_DIR=/tmp/charts
+
 helm init --client-only
 
-mkdir -p /tmp/charts
-cd /tmp/charts
+mkdir -p ${TMP_DIR}
+cd ${TMP_DIR}
 
-git clone ${REPOSITORY_URL}
+#HTTPS clone
+#git clone ${REPOSITORY_URL}
 
-cd /tmp/charts/my-helm-charts
+# SSH clone
+git clone ${CIRCLE_REPOSITORY_URL}
+
+cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
 
 for chart in charts/*
 do
@@ -30,15 +36,13 @@ do
  helm package ${chart} --destination .
 done
 
-helm repo index . --url https://${CIRCLE_PROJECT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+helm repo index . --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 git config user.email "$GIT_EMAIL"
 git config user.name "$GIT_USERNAME"
 
 git checkout gh-pages
 
-if ! git diff --quiet; then
-    git add .
-    git commit --message="Update index.yaml" --signoff
-    git push "$GIT_REPOSITORY_URL" gh-pages
-fi
+git add .
+git commit --message="Update index.yaml" --signoff
+git push "$REPOSITORY_URL" gh-pages
