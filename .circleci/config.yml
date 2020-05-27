@@ -44,13 +44,12 @@ workflows:
       - kubeval
       - lint
       - deprek8-check
-      - publish
-      # - publish:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      #     requires:
-      #       - kubeval
-      #       - lint
-      #       - deprek8-check
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - kubeval
+            - lint
+            - deprek8-check

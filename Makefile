@@ -74,7 +74,6 @@ buildGaleraClusterUKCloneFromUS:
 		--set cloneRemote=usdc-kdr-galera-backupstream.us.svc.cluster.local  \
 		--set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local
 
-
 buildGaleraClusterEUCloneFromUS:
 	@echo "Building a Galera Cluster in the US DC"
 	@echo "... with a galera DomainId of 300"
@@ -87,7 +86,6 @@ buildGaleraClusterEUCloneFromUS:
 		--namespace=eu \
 		--set cloneRemote=usdc-kdr-galera-backupstream.us.svc.cluster.local  \
 		--set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local
-
 
 buildGaleraClusterUSCloneFromUKWithMaxscaleReplication:
 	@echo "Building a Galera Cluster in the US DC"
