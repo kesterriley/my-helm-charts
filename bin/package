@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#/bin/bash
 
 # Steven Wade <steven@stevenwade.co.uk @swade1987 http://www.stevenwade.co.uk>
 # Kester Riley <kesterriley@hotmail.com>
@@ -11,6 +11,37 @@ set -o pipefail
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 
+
+main() {
+
+  clonegit
+  cleanup
+  package_charts
+  indexrepos
+  checkoutgit
+  publishfiles
+
+}
+
+clonegit() {
+  echo "Cloning ${CIRCLE_REPOSITORY_URL}"
+  tmp_dir=$(mktemp -d -t tmp-XXX)
+  helm init --client-only
+  cd ${tmp_dir}
+  # SSH clone
+  git clone ${CIRCLE_REPOSITORY_URL}
+  cd ${tmp_dir}/${CIRCLE_PROJECT_REPONAME}
+
+}
+cleanup() {
+
+  echo "Cleaning up old files and directories"
+  [[ -f index.yaml ]] && { echo "Removing old index.yaml file"; rm -rf index.yaml; } || echo "No existing index.yaml file"
+  rm -rf *.tgz || true
+  [[ -d .deploy ]] && { echo "Removing old deploy directory"; rm -rf .deploy; } || echo "No existing deploy directory"
+  mkdir -p .deploy
+
+}
 
 package_charts() {
 
@@ -28,24 +59,10 @@ package_charts() {
 
 }
 
-cleanup() {
+indexrepos() {
 
-  echo "Cleaning up old files and directories"
-  [[ -f index.yaml ]] && { echo "Removing old index.yaml file"; rm -rf index.yaml; } || echo "No existing index.yaml file"
-  rm -rf *.tgz || true
-  [[ -d .deploy ]] && { echo "Removing old deploy directory"; rm -rf .deploy } || echo "No existing deploy directory"
-  mkdir -p .deploy
-
-}
-
-clonegit() {
-  echo "Cloning ${CIRCLE_REPOSITORY_URL}"
-  tmp_dir=$(mktemp -d -t tmp-XXX)
-  helm init --client-only
-  cd ${tmp_dir}
-  # SSH clone
-  git clone ${CIRCLE_REPOSITORY_URL}
-  cd ${tmp_dir}/${CIRCLE_PROJECT_REPONAME}
+  echo "Indexing repos"
+  helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
 
 }
 
@@ -58,32 +75,15 @@ checkoutgit() {
 
 }
 
-indexrepos() {
+publishfiles() {
 
-  echo "Indexing repos"
-  helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
-
-}
-
-publishfiles () {
-
-  echo "Publising files"
-  #Move files from deployment location to root for publishing
+  echo "Publishing files"
+  # Move files from deployment location to root for publishing
   mv .deploy/index.yaml index.yaml
   mv .deploy/*.tgz .
   git add .
   git commit --message="Publishing latest charts." --signoff
   git push "$REPOSITORY_URL" gh-pages
-
-}
-
-main() {
-  clonegit
-  cleanup
-  package_charts
-  indexrepos
-  checkoutgit
-  publishfiles
 
 }
 
