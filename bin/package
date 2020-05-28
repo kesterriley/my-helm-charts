@@ -11,42 +11,80 @@ set -o pipefail
 : "${GIT_USERNAME:?Environment variable GIT_USERNAME must be set}"
 : "${GIT_EMAIL:?Environment variable GIT_EMAIL must be set}"
 
-TMP_DIR=/tmp/charts
 
-helm init --client-only
+package_charts() {
 
-mkdir -p ${TMP_DIR}
-cd ${TMP_DIR}
+  echo "Checking for charts to package"
+  for chart in charts/*
+  do
+   if [ $chart == 'charts/README.md' ]
+   then
+      continue
+   fi
+   printf "\nChecking %s\n" "${chart#*/}"
+   helm package ${chart} --destination .deploy
+   echo "Packaged chart ${chart}"
+  done
 
-# SSH clone
-git clone ${CIRCLE_REPOSITORY_URL}
+}
 
-cd ${TMP_DIR}/${CIRCLE_PROJECT_REPONAME}
+cleanup() {
 
-rm -rf .deploy
-mkdir -p .deploy
-rm -rf *.yaml
-rm -rf *.tgz
+  echo "Cleaning up old files and directories"
+  [[ -f index.yaml ]] && { echo "Removing old index.yaml file"; rm -rf index.yaml; } || echo "No existing index.yaml file"
+  rm -rf *.tgz || true
+  [[ -d .deploy ]] && { echo "Removing old deploy directory"; rm -rf .deploy } || echo "No existing deploy directory"
+  mkdir -p .deploy
 
-for chart in charts/*
-do
- if [ $chart == 'charts/README.md' ]
- then
-    continue
- fi
- printf "\nChecking %s\n" "${chart#*/}"
- helm package ${chart} --destination .deploy
-done
+}
 
-helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+clonegit() {
+  echo "Cloning ${CIRCLE_REPOSITORY_URL}"
+  tmp_dir=$(mktemp -d -t tmp-XXX)
+  helm init --client-only
+  cd ${tmp_dir}
+  # SSH clone
+  git clone ${CIRCLE_REPOSITORY_URL}
+  cd ${tmp_dir}/${CIRCLE_PROJECT_REPONAME}
 
-git config user.email "$GIT_EMAIL"
-git config user.name "$GIT_USERNAME"
-git checkout gh-pages
+}
 
-mv .deploy/index.yaml index.yaml
-mv .deploy/*.tgz .
+checkoutgit() {
 
-git add .
-git commit --message="Publishing latest charts." --signoff
-git push "$REPOSITORY_URL" gh-pages
+  echo "Checking out gh-pages"
+  git config user.email "$GIT_EMAIL"
+  git config user.name "$GIT_USERNAME"
+  git checkout gh-pages
+
+}
+
+indexrepos() {
+
+  echo "Indexing repos"
+  helm repo index .deploy --url https://${GIT_USERNAME}.github.io/${CIRCLE_PROJECT_REPONAME}
+
+}
+
+publishfiles () {
+
+  echo "Publising files"
+  #Move files from deployment location to root for publishing
+  mv .deploy/index.yaml index.yaml
+  mv .deploy/*.tgz .
+  git add .
+  git commit --message="Publishing latest charts." --signoff
+  git push "$REPOSITORY_URL" gh-pages
+
+}
+
+main() {
+  clonegit
+  cleanup
+  package_charts
+  indexrepos
+  checkoutgit
+  publishfiles
+
+}
+
+main
