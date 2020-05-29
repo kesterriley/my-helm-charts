@@ -15,6 +15,8 @@
 
 This project contains two helm charts that will install a **Galera Cluster** or a **Master and two Replica** MariaDB servers, sitting behind a pair of Maxscale proxy servers, providing fail over and master down detection and promotion.
 
+**THIS PROJECT IS NOT FOR USE IN PRODUCTION**
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
@@ -235,7 +237,7 @@ To contribute to *my-helm-repo*, follow these steps:
 1. Fork this repository.
 2. Create a branch: `git checkout -b <branch_name>`.
 3. Make your changes and commit them: `git commit -m '<commit_message>'`
-4. Push to the original branch: `git push origin *my-helm-repo*/<location>`
+4. Push to the original branch: `git push origin my-helm-repo/<location>`
 5. Create the pull request.
 
 Alternatively see the GitHub documentation on [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
