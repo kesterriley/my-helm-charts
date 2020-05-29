@@ -2,7 +2,7 @@ init:
 	clear
 	@echo "Run make with the following commands:"
 	@echo ""
-	@echo "... buildMasterReplicaDemo"
+	@echo "... buildMasterReplicaDemoUK"
 	@echo ""
 	@echo "... buildBasicGaleraClusterUK"
 	@echo "... buildBasicGaleraClusterUS"
@@ -20,9 +20,9 @@ init:
 	@echo "... helm repo add kesterriley-repo https://kesterriley.github.io/my-helm-charts/"
 	@echo "... or to update: helm repo update"
 
-buildMasterReplicaDemo:
+buildMasterReplicaDemoUK:
 	@echo "Building a Master / Replica cluster"
-	helm install mariadb kesterriley-repo/kdr-masterreplica
+	helm install mariadb kesterriley-repo/kdr-masterreplica -n uk
 
 buildBasicGaleraClusterUK:
 	@echo "Building a Galera Cluster in the UK DC"

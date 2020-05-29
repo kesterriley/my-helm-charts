@@ -23,4 +23,14 @@
 To access the Read / Write Split connection : {{ .Values.maxscale.rwService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
 To access the Master Only connection: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
 
-To check the status of MaxScale : kubectl exec -it -n {{ .Release.Namespace }} mariadb-kdr-masterreplica-maxscale-active-8f49ddcdd-5gg7m -- maxctrl list servers
+Set an Environment variable to the maxscale server:
+MAXACTIVE=xxxx
+
+To check the status of MaxScale :
+  kubectl exec -it -n {{ .Release.Namespace }} $MAXACTIVE -- maxctrl list servers
+
+To put a server in to maintenance mode :
+  kubectl exec -it -n {{ .Release.Namespace }} $MAXACTIVE -- maxctrl set server db1 maintenance
+
+To clear a server from maintenance mode:
+  kubectl exec -it -n {{ .Release.Namespace }} $MAXACTIVE -- maxctrl clear server db1 maintenance
