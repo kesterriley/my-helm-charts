@@ -9,8 +9,6 @@ spec:
   ports:
   - port: 3306
     name: mariadb
-  - port: 3307
-    name: recovery
   type: ClusterIP
   selector:
     statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-0
@@ -26,8 +24,6 @@ spec:
   ports:
   - port: 3306
     name: mariadb
-  - port: 3307
-    name: recovery
   type: ClusterIP
   selector:
     statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-1
@@ -43,8 +39,6 @@ spec:
   ports:
   - port: 3306
     name: mariadb
-  - port: 3307
-    name: recovery
   type: ClusterIP
   selector:
     statefulset.kubernetes.io/pod-name: {{ template "kdr-masterreplica.fullname" . }}-2
