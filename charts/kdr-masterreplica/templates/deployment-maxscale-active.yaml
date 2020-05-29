@@ -80,11 +80,14 @@ spec:
             - name: MAX_SERVER
               value: "Active"
             - name: DB1_ADDRESS
-              value: {{ template "kdr-masterreplica.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-0
+              # value: {{ template "kdr-masterreplica.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB2_ADDRESS
-              value: {{ template "kdr-masterreplica.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-1
+              # value: {{ template "kdr-masterreplica.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB3_ADDRESS
-              value: {{ template "kdr-masterreplica.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+              value: {{ template "kdr-masterreplica.fullname" . }}-2
+              # value: {{ template "kdr-masterreplica.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}
@@ -123,4 +126,4 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration
+            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration-master

@@ -44,7 +44,8 @@ spec:
               name: {{ template "kdr-masterreplica.fullname" . }}-secrets
               key: MAXSCALE_USER
         - name: MASTERHOST
-          value: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+          value: {{ template "kdr-masterreplica.fullname" . }}-0
+          # value: {{ .Values.maxscale.masterOnlyService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
         - name: BACKUPSTREAM
           value: {{ include "kdr-masterreplica.fullname" . }}-{{ .Values.mariabackup.backupServiceService.name }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
         - name: MAXSCALE_USER_PASSWORD

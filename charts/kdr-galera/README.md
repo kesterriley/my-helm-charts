@@ -117,7 +117,7 @@ in the other three:
 EU:
 for ((i=1;i<=10000;i++));
 do
-   mysql -umariadb -pmariadb -h$clusterip -P$euport -e "insert into demo.test SET host='EU', created=now()"
+   mariadb -umariadb -pmariadb -h$clusterip -P$euport -e "insert into demo.test SET host='EU', created=now()"
 done
 
 UK:

@@ -13,19 +13,35 @@ data:
 {{ .Values.mariadbConfiguration | indent 4 }}
 {{- end }}
 {{ end }}
-{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfiguration) (not .Values.configurationConfigMap) }}
+{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfigurationMaster) (not .Values.configurationConfigMap) }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration
+  name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration-master
   #namespace: kdr-masterreplica
   labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
 data:
 {{- if (.Files.Glob "files/my.cnf") }}
 {{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
-{{- else if .Values.maxscaleConfiguration }}
+{{- else if .Values.maxscaleConfigurationMaster }}
   maxscale.cnf: |
-{{ .Values.maxscaleConfiguration | indent 4 }}
+{{ .Values.maxscaleConfigurationMaster | indent 4 }}
+{{- end }}
+{{ end }}
+{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfigurationPassive) (not .Values.configurationConfigMap) }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration-passive
+  #namespace: kdr-masterreplica
+  labels: {{- include "kdr-masterreplica.labels" . | nindent 4 }}
+data:
+{{- if (.Files.Glob "files/my.cnf") }}
+{{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
+{{- else if .Values.maxscaleConfigurationPassive }}
+  maxscale.cnf: |
+{{ .Values.maxscaleConfigurationPassive | indent 4 }}
 {{- end }}
 {{ end }}
