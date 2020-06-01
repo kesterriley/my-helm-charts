@@ -11,6 +11,13 @@ Before you begin, ensure you have VirtualBox installed:
 
 ## Installing MiniKube
 
+You will need to install hyperkit, kubectl:
+
+```
+brew install hyperkit
+brew install kubectl
+```
+
 To install MiniKube, follow these steps:
 
 ```
@@ -21,6 +28,8 @@ curl -Lo minikube https://github.com/kubernetes/minikube/releases/download/v1.6.
   sudo mv ~/minikube/minikube /usr/local/bin/
 ```
 
+
+
 ## Starting MiniKube
 
 You need to ensure MiniKube has enough resources for the workload you are using, on my Mac this is the configuration I use
@@ -29,12 +38,18 @@ You need to ensure MiniKube has enough resources for the workload you are using,
 minikube start -p myprofile --memory=8192 --cpus=4 --disk-size=50g
 ````
 
+Once the service is started, you can get its IP address and set it in the hosts file.
+
+```
+echo "`minikube ip -p myprofile` minikube.local prometheus.local alertmanager.local grafana.local" >> /etc/hosts
+```
+
 ## Stoping MiniKube
 
 To Stop the MiniKube process
 
 ```
-minikube stop
+minikube -p myprofile stop
 ````
 
 ## SSH MiniKube

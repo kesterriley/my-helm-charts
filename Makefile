@@ -2,6 +2,8 @@ init:
 	clear
 	@echo "Run make with the following commands:"
 	@echo ""
+	@echo "... buildMonitoringCluster"
+	@echo ""
 	@echo "... buildMasterReplicaDemoUK"
 	@echo ""
 	@echo "... buildBasicGaleraClusterUK"
@@ -19,6 +21,11 @@ init:
 	@echo "Before any of this works you must install the helm repo:"
 	@echo "... helm repo add kesterriley-repo https://kesterriley.github.io/my-helm-charts/"
 	@echo "... or to update: helm repo update"
+
+buildMonitoringCluster:
+	@echo "Creating a Prometheous and Grafana installation"
+	helm install prometheus -n monitoring stable/prometheus
+	helm install grafana -n grafana stable/grafana
 
 buildMasterReplicaDemoUK:
 	@echo "Building a Master / Replica cluster"

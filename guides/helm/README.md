@@ -24,3 +24,10 @@ Once installed you need to initialise helm:
 ```
 helm init
 ```
+
+and add in the kubernetes helm repo and updarte helm:
+
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo update
+```
