@@ -3,9 +3,9 @@ entries:
   kdr-galera:
   - apiVersion: v1
     appVersion: 1.16.1
-    created: "2020-06-01T10:16:17.82858265Z"
+    created: "2020-06-03T08:20:47.164608681Z"
     description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
-    digest: 0b30f29a4edaac4f1ecdd318d93a5fe79bb5bde864b3170f8759a74109518966
+    digest: 614b4fc3172efc7a7c52a605469d2d4814e4146b23ab9a3ede2ba23917d5887e
     home: http://github.com/kesterriley/my-helm-charts
     maintainers:
     - email: kesterriley@hotmail.com
@@ -18,9 +18,9 @@ entries:
   kdr-masterreplica:
   - apiVersion: v1
     appVersion: 1.16.0
-    created: "2020-06-01T10:16:17.829378809Z"
+    created: "2020-06-03T08:20:47.165386926Z"
     description: A Helm chart for deplying a master and replica MariaDB Database installation
-    digest: a226ef31e362d76d006b10e5600e1b69cefbcc3edeb7cfc69f1bf596decc66f6
+    digest: a767a43bca53bb6a8b2f033a626e36ccd0f56e46d8fa5c8b88fb24ba899b0234
     home: http://github.com/kesterriley/my-helm-charts
     maintainers:
     - email: kesterriley@hotmail.com
@@ -28,6 +28,6 @@ entries:
       url: https://github.com/kesterriley
     name: kdr-masterreplica
     urls:
-    - https://kesterriley.github.io/my-helm-charts/kdr-masterreplica-0.1.19.tgz
-    version: 0.1.19
-generated: "2020-06-01T10:16:17.827369318Z"
+    - https://kesterriley.github.io/my-helm-charts/kdr-masterreplica-0.1.20.tgz
+    version: 0.1.20
+generated: "2020-06-03T08:20:47.163204733Z"
