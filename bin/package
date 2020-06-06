@@ -27,7 +27,7 @@ clonegit() {
   echo "Cloning ${CIRCLE_REPOSITORY_URL}"
   tmp_dir=/tmp/build
   mkdir -p $tmp_dir
-  helm init --client-only
+  #helm init --client-only
   cd ${tmp_dir}
   # SSH clone
   git clone ${CIRCLE_REPOSITORY_URL}
