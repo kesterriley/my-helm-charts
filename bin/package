@@ -86,6 +86,7 @@ publishfiles() {
   mv .deploy/*.tgz .
   git add .
   git commit --message="Publishing latest charts." --signoff
+  git remote set-url origin ${CIRCLE_REPOSITORY_URL}
   git push "$REPOSITORY_URL" gh-pages
 
 }
