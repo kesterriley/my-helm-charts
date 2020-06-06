@@ -3,6 +3,8 @@
 # Steven Wade <steven@stevenwade.co.uk @swade1987 http://www.stevenwade.co.uk>
 # Kester Riley <kesterriley@hotmail.com>
 
+apk add --no-cache openssh
+
 set -o errexit
 set -o nounset
 set -o pipefail
@@ -13,7 +15,6 @@ set -o pipefail
 
 
 main() {
-  apk add --no-cache openssh
   clonegit
   cleanup
   package_charts
@@ -72,8 +73,8 @@ indexrepos() {
 checkoutgit() {
 
   echo "Checking out gh-pages"
-  git config --global user.email "$GIT_EMAIL"
-  git config --global user.name "$GIT_USERNAME"
+  git config user.email "$GIT_EMAIL"
+  git config user.name "$GIT_USERNAME"
   git checkout gh-pages
 
 }
