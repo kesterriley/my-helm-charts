@@ -2,7 +2,7 @@ version: 2
 jobs:
   kubeval:
     docker:
-      - image: eu.gcr.io/swade1987/kubernetes-toolkit:1.17.4
+      - image: quay.io/swade1987/kubernetes-toolkit:1.17.4
     steps:
       - checkout
       - run:
@@ -12,7 +12,7 @@ jobs:
 
   deprek8-check:
     docker:
-      - image: eu.gcr.io/swade1987/kubernetes-toolkit:1.17.4
+      - image: eu.gcr.io/swade1987/kubernetes-toolkit:1.17.2
     steps:
       - checkout
       - run:
@@ -21,7 +21,7 @@ jobs:
 
   lint:
     docker:
-      - image: eu.gcr.io/helmpack/chart-testing:v3.0.0-rc.1
+      - image: quay.io/helmpack/chart-testing:v3.0.0-rc.1
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
 
   publish:
     docker:
-      - image: eu.gcr.io/swade1987/kubernetes-toolkit:1.17.4
+      - image: eu.gcr.io/swade1987/kubernetes-toolkit:1.17.2
     steps:
       - checkout
       - run:
