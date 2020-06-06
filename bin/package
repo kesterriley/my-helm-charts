@@ -30,6 +30,7 @@ clonegit() {
   #helm init --client-only
   cd ${tmp_dir}
   # SSH clone
+  ssh-keyscan github.com >> ~/.ssh/known_hosts
   git clone ${CIRCLE_REPOSITORY_URL}
   cd ${tmp_dir}/${CIRCLE_PROJECT_REPONAME}
 
