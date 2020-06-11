@@ -135,8 +135,11 @@ readinessProbe:
 
 
 mariadbConfiguration: |-
-    # Populated from Kubernetes config-map
-    # Kester Riley <kesterriley@hotmail.com>
+    ###############################################
+    ## MaxScale configuration for MariaDB        ##
+    ## Kester Riley <kesterriley@hotmail.com>    ##
+    ## March 2020                                ##
+    ###############################################
     [client]
     default-character-set = utf8
     [mysql]
@@ -179,7 +182,7 @@ mariadbConfiguration: |-
 maxscaleConfigurationMaster: |-
     ###############################################
     ## MaxScale configuration for Galera Cluster ##
-    ## Kester Riley <kester.riley@mariadb.com>   ##
+    ## Kester Riley <kesterriley@hotmail.com>    ##
     ## March 2020                                ##
     ###############################################
     [MaxScale]
@@ -291,7 +294,7 @@ maxscaleConfigurationMaster: |-
 maxscaleConfigurationPassive: |-
     ###############################################
     ## MaxScale configuration for Galera Cluster ##
-    ## Kester Riley <kester.riley@mariadb.com>   ##
+    ## Kester Riley <kesterriley@hotmail.com>    ##
     ## March 2020                                ##
     ###############################################
     [MaxScale]

@@ -34,7 +34,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-pasive
+  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-passive
   #namespace: kdr-galera
   labels: {{- include "kdr-galera.labels" . | nindent 4 }}
 data:
