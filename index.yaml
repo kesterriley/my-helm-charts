@@ -3,9 +3,9 @@ entries:
   kdr-galera:
   - apiVersion: v1
     appVersion: 1.16.1
-    created: "2020-06-11T12:07:22.790541056Z"
+    created: "2020-12-27T17:17:33.636565346Z"
     description: A Helm chart for creating MariaDB Galera Cluster with MaxScale
-    digest: 21a1b2411cba78f29ead8951ee34c89b6661ed5cface6d2300fe82840caf4bd1
+    digest: 10dbdfbd12b67acff52314356390c8938d21379a81dbe5680268a27f864332de
     home: http://github.com/kesterriley/my-helm-charts
     maintainers:
     - email: kesterriley@hotmail.com
@@ -18,9 +18,9 @@ entries:
   kdr-masterreplica:
   - apiVersion: v1
     appVersion: 1.16.0
-    created: "2020-06-11T12:07:22.794006522Z"
+    created: "2020-12-27T17:17:33.63859726Z"
     description: A Helm chart for deplying a master and replica MariaDB Database installation
-    digest: 52e89a81e9df3bf4e3f287cd951cf36bc24a4ea47ae721ff9ad884f566575fa1
+    digest: 4f5b45d544c9901312aa711d1b0dab65659a49d50f2aeadc78ac1c433c4c57e1
     home: http://github.com/kesterriley/my-helm-charts
     maintainers:
     - email: kesterriley@hotmail.com
@@ -30,4 +30,15 @@ entries:
     urls:
     - https://kesterriley.github.io/my-helm-charts/kdr-masterreplica-0.1.21.tgz
     version: 0.1.21
-generated: "2020-06-11T12:07:22.787545354Z"
+  qtcsystems:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2020-12-27T17:17:33.63938517Z"
+    description: A Helm chart for Kubernetes
+    digest: ab45d4ebe684ff43f5937f2b96437c30010caadb0ae4a4360ed8eca51515fce0
+    name: qtcsystems
+    type: application
+    urls:
+    - https://kesterriley.github.io/my-helm-charts/qtcsystems-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-12-27T17:17:33.634264674Z"
