@@ -58,6 +58,12 @@ spec:
           - name: BACKUPSTREAM
             value: "yes"
           {{- end }}
+          {{- if .Values.restorebackupname }}
+          - name: BACKUPTORESTORE
+            value: {{ .Values.restorebackupname | quote }}
+          - name: BACKUPCLUSTERDIR
+            value: {{ .Values.job.persistence.mountPath | quote }}
+          {{- end }}
           - name: CLONEFROMREMOTE
             value: {{ .Values.cloneRemote | quote }}
           - name: MASTERHOST
@@ -178,6 +184,10 @@ spec:
           mountPath: {{ .Values.persistence.mountPath }}
         - name: conf
           mountPath: /etc/my.cnf.d
+        {{- if .Values.restorebackupname }}
+        - name: backupdir
+          mountPath: {{ .Values.job.persistence.mountPath }}
+        {{- end }}
       volumes:
       - name: conf
         emptyDir: {}

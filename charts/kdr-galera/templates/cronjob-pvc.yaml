@@ -1,0 +1,20 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: backupdir
+  labels:
+      app.kubernetes.io/name: {{ include "kdr-galera.fullname" . }}-cronjob
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    {{- range .Values.job.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.job.persistence.size | quote }}
+  {{ include "cronjob.storageClass" . }}
+  selector:
+    matchLabels:
+      id: backupdir

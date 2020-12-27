@@ -11,7 +11,7 @@ image:
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -28,6 +28,8 @@ galera:
 
 cloneRemote: ""
 remoteMaxscale: ""
+backupcloneService: "ukdc-kdr-galera-backupstream.uk.svc.cluster.local"
+restorebackupname: ""
 
 mariabackup:
   enabled: true
@@ -250,6 +252,7 @@ maxscaleConfigurationMaster: |-
     backend_connect_timeout=6
     backend_write_timeout=4
     backend_read_timeout=2
+    monitor_interval=2500ms
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
@@ -364,6 +367,7 @@ maxscaleConfigurationPassive: |-
     backend_connect_timeout=6
     backend_write_timeout=4
     backend_read_timeout=2
+    monitor_interval=2500ms
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
@@ -533,3 +537,50 @@ maxscale:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+# Settings fro CronJob to backup pods
+
+job:
+
+  # The Kubernetes secret used to allow pulling the image from a private image registry.
+  # This defaults to a blank string so that it is not used by default.
+  imagePullSecretName: ""
+
+  ## Pod Annotations
+  podAnnotations:
+
+  ## Extra environment variables that will be pass into pods
+  env: {}
+  #  key: value
+  #  key: value
+
+  ## Extra environment variables (from existing secrets) that will be pass into pods
+  envFromSecret: {}
+    # - name: DB_ROOT_USERNAME
+    #   secretName: app-secret
+    #   secretKeyRef: first-key
+
+  # schedule: "* */4 * * *"
+  schedule: "*/10 * * * *"
+
+  resources: {}
+
+  # Will suspend the cronjob if true
+  suspend:
+
+  # Deadline in seconds for starting the job if it misses scheduled time for any reason
+  startingDeadlineSeconds:
+
+  # The time in seconds to wait after the job completes or fails before removing
+  ttlSecondsAfterFinished:
+
+  persistence:
+    enabled: true
+    mountPath: /data/backups
+    purgeDays: 7
+    annotations:
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    storageClass: "standard"

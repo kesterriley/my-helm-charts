@@ -1,0 +1,54 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "kdr-galera.fullname" . }}-cronjob
+  labels: {{- include "kdr-galera.labels" . | nindent 4 }}
+spec:
+  {{- if ( .Values.job.suspend ) }}
+  suspend: true
+  {{- end }}
+  {{- if ( .Values.job.startingDeadlineSeconds ) }}
+  startingDeadlineSeconds: {{ .Values.job.startingDeadlineSeconds }}
+  {{- end }}
+  schedule: "{{ .Values.job.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      {{- if ( .Values.job.ttlSecondsAfterFinished ) }}
+      ttlSecondsAfterFinished: {{ .Values.job.ttlSecondsAfterFinished }}
+      {{- end }}
+      template:
+        metadata:
+          labels:
+            app_name: {{ .Release.Name }}
+          {{- with .Values.job.podAnnotations }}
+          annotations:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+        spec:
+          restartPolicy: Never
+          volumes:
+            - name: backupdir
+              persistentVolumeClaim:
+                claimName: backupdir
+          containers:
+            - name: {{ .Release.Name }}
+              image:  {{ template "kdr-galera.image" . }}
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+                - name: BACKUPCLUSTER
+                  value: {{ .Values.backupcloneService | quote }}
+                - name: BACKUPCLUSTERDIR
+                  value: {{ .Values.job.persistence.mountPath | quote }}
+                - name: BACKUPPURGEDAYS
+                  value: {{ .Values.job.persistence.purgeDays | quote }}
+              args:
+                - mariabackup
+              volumeMounts:
+                - name: backupdir
+                  mountPath: {{ .Values.job.persistence.mountPath }}
+              resources:
+{{ toYaml .Values.job.resources | indent 16 }}

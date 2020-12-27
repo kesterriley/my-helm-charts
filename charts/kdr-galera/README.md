@@ -26,8 +26,25 @@ kubectl delete pods kdr-galera-maxscale-active-864588545d-qk25r
 login in to maxscle server and do watch maxctrl list services
 
 
+# Cron failedJobsHistoryLimit
+kubectl get cronjob -n uk
+kubectl get jobs -n uk --watch
 
-TO SET UP REPLICATION BETWEEN DATA CENTRES
+kubectl get pods -A
+
+will show you cron job, then you claimName
+
+ kubectl logs -n uk -f ukdc-kdr-galera-cronjob-1596363060-tsxf9
+
+
+# To restore from a backup:
+
+1. Identify backup name
+2. Scale Statefulset to 0
+3. kubectl scale statefulsets ukdc-kdr-galera -n uk --replicas=1
+
+
+###TO SET UP REPLICATION BETWEEN DATA CENTRES
 
 cd /Users/kester/src/github.com/kesterriley/helm-charts/charts
 
@@ -85,11 +102,22 @@ CREATE DATABASE EU;
 
 ON one server:
 
-CREATE DATABASE demo;
-CREATE TABLE demo.test (id SERIAL PRIMARY KEY, host VARCHAR(50) NOT NULL, created DATETIME) ENGINE=INNODB DEFAULT CHARSET=utf8 ;
+mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$euport -e 'CREATE DATABASE demo;'
+mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$euport -e 'CREATE TABLE demo.test (id SERIAL PRIMARY KEY, host VARCHAR(50) NOT NULL, created DATETIME) ENGINE=INNODB DEFAULT CHARSET=utf8 ;'
 
+To check maxscale:
 
+kubectl exec -it -n uk XXXXXX -- maxctrl list servers
+kubectl exec -it -n us XXXXXX -- maxctrl list servers
+kubectl exec -it -n eu XXXXXX -- maxctrl list servers
 
+To check slave replication:
+
+kubectl exec -it -n us usdc-kdr-galera-1 -- mariadb -uMARIADB_USER -pmariadb -h127.0.0.1 -e"SHOW ALL SLAVES STATUS\G"
+
+kubectl exec -it -n uk ukdc-kdr-galera-1 -- mariadb -uMARIADB_USER -pmariadb -h127.0.0.1 -e"SHOW ALL SLAVES STATUS\G"
+
+kubectl exec -it -n eu eudc-kdr-galera-1 -- mariadb -uMARIADB_USER -pmariadb -h127.0.0.1 -e"SHOW ALL SLAVES STATUS\G"
 
 
 get ip: kubectl cluster-info
@@ -103,13 +131,13 @@ THEN OPEN SIX TERMINALS:
 in three of them changing port and IP
 
 EU:
-watch -n0.5 "mysql -umariadb -pmariadb -h$clusterip -P$euport -e 'select count(*) from demo.test'"
+watch -n2 "mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$euport -e 'select host,count(*) from demo.test group by host'"
 
 UK:
-watch -n0.5 "mysql -umariadb -pmariadb -h$clusterip -P$ukport -e 'select count(*) from demo.test'"
+watch -n2 "mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$ukport -e 'select host,count(*) from demo.test group by host'"
 
 US:
-watch -n0.5 "mysql -umariadb -pmariadb -h$clusterip -P$usport -e 'select count(*) from demo.test'"
+watch -n2 "mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$usport -e 'select host,count(*) from demo.test group by host'"
 
 
 in the other three:
@@ -117,20 +145,20 @@ in the other three:
 EU:
 for ((i=1;i<=10000;i++));
 do
-   mariadb -umariadb -pmariadb -h$clusterip -P$euport -e "insert into demo.test SET host='EU', created=now()"
+    mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$euport -e "insert into demo.test SET host='EU', created=now()"
 done
 
 UK:
 for ((i=1;i<=10000;i++));
 do
-   mysql -umariadb -pmariadb -h$clusterip -P$ukport -e "insert into demo.test SET host='UK', created=now()"
+    mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$ukport -e "insert into demo.test SET host='UK', created=now()"
 done
 
 
 US:
 for ((i=1;i<=10000;i++));
 do
-   mysql -umariadb -pmariadb -h$clusterip -P$usport -e "insert into demo.test SET host='US', created=now()"
+    mariadb -uMARIADB_USER -pmariadb -h$clusterip -P$usport -e "insert into demo.test SET host='US', created=now()"
 done
 
 

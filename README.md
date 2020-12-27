@@ -191,8 +191,7 @@ Terminal Three:
 Connect to MaxScale and run a watch:
 
 ```bash
-kubectl exec -it -n uk mariadb-kdr-masterreplica-maxscale-active-6cb8df65fc-rwzb6 -- bash
-watch "maxctrl list servers"
+kubectl exec -it -n uk mariadb-kdr-masterreplica-maxscale-active-6cb8df65fc-rwzb6 -- watch "maxctrl list servers"
 ```
 
 Terminal Four:
@@ -210,7 +209,7 @@ Terminal Four:
 Kill the master node.
 
 ```bash
-kubectl delete pod -n uk mariadb-kdr-masterreplica-0
+kubectl delete pod -n uk ukdc-kdr-galera-1
 ```
 
 You will notice the MaxScale watch identifies the pod as down and moves the master, the insert script will fail for a few seconds (this time depends on the configuration) and then resumes inserting data. The count on Terminal Two carries on increasing. When the node comes back in service you will notice that it rejoins the cluster as a slave and syncs to the master.
