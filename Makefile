@@ -15,12 +15,28 @@ init:
 	@echo "... buildGaleraClusterEUCloneFromUS"
 	@echo ""
 	@echo "... buildGaleraClusterUSCloneFromUKWithMaxscaleReplication"
-	@echo "... buildGaleraClusterUKCloneFromUSWithMaxscaleReplication"
+	@echo "... buildGaleraClusterEUCloneFromUSWithMaxscaleReplicationFromUSandUK"
 	@echo ""
+	@echo ""
+	@echo "To build a three cluster Galera Set up"
+	@echo "	buildGaleraClusterUKWithMaxscaleReplicationFromUSandEU"
+	@echo "	buildGaleraClusterUSCloneFromUKWithMaxscaleReplicationFromUKandEU"
+	@echo "	buildGaleraClusterEUCloneFromUSWithMaxscaleReplication"
 	@echo ""
 	@echo "Before any of this works you must install the helm repo:"
 	@echo "... helm repo add kesterriley-repo https://kesterriley.github.io/my-helm-charts/"
 	@echo "... or to update: helm repo update"
+	@echo ""
+	@echo ""
+	@echo "minikube"
+	@echo "... minikubeStop"
+	@echo "... minikubeStart"
+
+minikubeStop:
+	minikube stop -p myprofile
+
+minikubeStart:
+	minikube start -p myprofile --memory 8192 --cpus=4 --disk-size=80g
 
 buildMonitoringCluster:
 	@echo "Creating a Prometheous and Grafana installation"
@@ -94,21 +110,6 @@ buildGaleraClusterEUCloneFromUS:
 		--set cloneRemote=usdc-kdr-galera-backupstream.us.svc.cluster.local  \
 		--set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local
 
-buildGaleraClusterUSCloneFromUKWithMaxscaleReplication:
-	@echo "Building a Galera Cluster in the US DC"
-	@echo "... with a galera DomainId of 200"
-	@echo "... and an autoIncrementOffset of 4"
-	@echo "... and cloning from the UK DC"
-	@echo "... and configuring replication from the UK"
-	helm install usdc kesterriley-repo/kdr-galera \
-	  --set galera.domainId=200 \
-		--set galera.autoIncrementOffset=4 \
-		--namespace=us \
-		--set cloneRemote=ukdc-kdr-galera-backupstream.uk.svc.cluster.local  \
-		--set remoteMaxscale=ukdc-kdr-galera-masteronly.uk.svc.cluster.local \
-		--set maxscale.changeMaster.name1=ustoukauto  \
-		--set maxscale.changeMaster.host1=ukdc-kdr-galera-masteronly.uk.svc.cluster.local
-
 buildGaleraClusterUKCloneFromUSWithMaxscaleReplication:
 	@echo "Building a Galera Cluster in the UK DC"
 	@echo "... with a galera DomainId of 100"
@@ -123,3 +124,55 @@ buildGaleraClusterUKCloneFromUSWithMaxscaleReplication:
 		--set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local \
 		--set maxscale.changeMaster.name1=uktousauto  \
 		--set maxscale.changeMaster.host1=usdc-kdr-galera-masteronly.us.svc.cluster.local
+
+buildGaleraClusterUKWithMaxscaleReplicationFromUSandEU:
+	@echo "Building a Galera Cluster in the UK DC"
+	@echo "... with a galera DomainId of 100"
+	@echo "... and an autoIncrementOffset of 1"
+	@echo "... and cloning from the US DC"
+	@echo "... and configuring replication from the US"
+	@echo "... and configuring replication from the EU"
+	helm install ukdc kesterriley-repo/kdr-galera \
+	  --set galera.domainId=100 \
+		--set galera.autoIncrementOffset=1 \
+		--namespace=uk \
+		--set maxscale.changeMaster.name1=uktousauto  \
+		--set maxscale.changeMaster.host1=usdc-kdr-galera-masteronly.us.svc.cluster.local \
+		--set maxscale.changeMaster.name2=uktoeuauto  \
+		--set maxscale.changeMaster.host2=eudc-kdr-galera-masteronly.eu.svc.cluster.local
+
+buildGaleraClusterUSCloneFromUKWithMaxscaleReplicationFromUKandEU:
+	@echo "Building a Galera Cluster in the US DC"
+	@echo "... with a galera DomainId of 200"
+	@echo "... and an autoIncrementOffset of 4"
+	@echo "... and cloning from the UK DC"
+	@echo "... and configuring replication from the UK"
+	@echo "... and configuring replication from the EU"
+	helm install usdc kesterriley-repo/kdr-galera \
+	  --set galera.domainId=200 \
+		--set galera.autoIncrementOffset=4 \
+		--namespace=us \
+		--set cloneRemote=ukdc-kdr-galera-backupstream.uk.svc.cluster.local  \
+		--set remoteMaxscale=ukdc-kdr-galera-masteronly.uk.svc.cluster.local \
+		--set maxscale.changeMaster.name1=ustoukauto  \
+		--set maxscale.changeMaster.host1=ukdc-kdr-galera-masteronly.uk.svc.cluster.local \
+		--set maxscale.changeMaster.name2=ustoeuauto  \
+		--set maxscale.changeMaster.host2=eudc-kdr-galera-masteronly.eu.svc.cluster.local
+
+buildGaleraClusterEUCloneFromUSWithMaxscaleReplicationFromUSandUK:
+	@echo "Building a Galera Cluster in the EU DC"
+	@echo "... with a galera DomainId of 300"
+	@echo "... and an autoIncrementOffset of 7"
+	@echo "... and cloning from the US DC"
+	@echo "... and configuring replication from the US"
+	@echo "... and configuring replication from the UK"
+	helm install eudc kesterriley-repo/kdr-galera \
+	  --set galera.domainId=300 \
+		--set galera.autoIncrementOffset=7 \
+		--namespace=eu \
+		--set cloneRemote=usdc-kdr-galera-backupstream.us.svc.cluster.local  \
+		--set remoteMaxscale=usdc-kdr-galera-masteronly.us.svc.cluster.local \
+		--set maxscale.changeMaster.name1=eutousauto  \
+		--set maxscale.changeMaster.host1=usdc-kdr-galera-masteronly.us.svc.cluster.local \
+		--set maxscale.changeMaster.name2=eutoukauto  \
+		--set maxscale.changeMaster.host2=ukdc-kdr-galera-masteronly.uk.svc.cluster.local
