@@ -13,18 +13,19 @@
 #      - probably needs RBAC
 #      - needs secrets
 #      - needs different databases
-#      - needs https 
+#      - needs https
 #
 ################################################################################
 
 replicaCount: 1
 
 image:
-  repository: registry.digitalocean.com/kesterriley/14xd
+  repository: registry.digitalocean.com/qtc-systems/14xd
+  tag: latest
   pullPolicy: Always
 
 imagePullSecrets:
-  - name: registry-kesterriley
+  - name: qtc-systems
 nameOverride: ""
 fullnameOverride: ""
 
