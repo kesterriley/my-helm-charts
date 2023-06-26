@@ -56,6 +56,12 @@ helm repo remove kesterriley-repo
 
 To use *my-helm-repo*, follow these steps:
 
+You must first create a NameSpace if there is not one:
+
+```
+kubectl create namespace uk
+```
+
 Building a Master / Replica cluster:
 
 ```

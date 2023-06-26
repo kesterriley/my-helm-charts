@@ -583,4 +583,4 @@ job:
     accessModes:
       - ReadWriteOnce
     size: 10Gi
-    storageClass: "standard"
+    storageClass: "hostpath"
