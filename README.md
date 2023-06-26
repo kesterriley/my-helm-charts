@@ -17,6 +17,9 @@ This project contains two helm charts that will install a **Galera Cluster** or 
 
 **THIS PROJECT IS NOT FOR USE IN PRODUCTION**
 
+CURRENTLY THE STORAGE IS SET TO RUN ON LOCAL DOCKER KUBERNETES DESKTOP
+
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
