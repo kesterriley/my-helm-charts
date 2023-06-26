@@ -263,6 +263,5 @@ Thanks to the following people who have contributed to this project:
 If you want to contact me you can reach me at kesterriley@hotmail.com.
 
 ## License
-<!--- If you're not sure which open license to use see https://choosealicense.com/--->
 
 This project uses the following license: [MIT](https://github.com/kesterriley/my-helm-charts/blob/master/LICENSE).
