@@ -118,7 +118,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "standard"
+  storageClass: "localhost"
 
 livenessProbe:
   enabled: true
