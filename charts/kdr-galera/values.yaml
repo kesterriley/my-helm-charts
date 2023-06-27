@@ -497,7 +497,7 @@ maxscale:
     host2: none
   image:
     registry: docker.io
-    repository: kesterriley/mdb-test-10-4-maxscale
+    repository: kesterriley/mdb-test-23-02-2-maxscale
     tag: latest
     pullPolicy: Always
   masterOnlyService:
