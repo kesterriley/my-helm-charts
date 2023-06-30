@@ -36,4 +36,23 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "kdr-galera.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}-maxscale
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kdr-galera.fullname" . }}-{{ .Values.maxscale.guiService.name }}
+  labels:
+    app.kubernetes.io/name: {{ include "kdr-galera.name" . }}
+    helm.sh/chart: {{ include "kdr-galera.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.maxscale.guiService.type }}
+  ports:
+    - name: {{ .Values.maxscale.guiService.name }}
+      port: {{ .Values.maxscale.guiService.port }}
+      targetPort: {{ .Values.maxscale.guiService.targetPort }}
+  selector:
+    app.kubernetes.io/name: {{ include "kdr-galera.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-maxscale
 {{- end }}

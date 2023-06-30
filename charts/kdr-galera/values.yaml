@@ -202,6 +202,12 @@ maxscaleConfigurationMaster: |-
     log_warning=off
     # Enable or disable the logging of messages whose syslog priority is debug
     log_debug=off
+    rebalance_period=10s
+    admin_enabled=1
+    admin_auth=1
+    admin_host=0.0.0.0
+    admin_gui=1
+    admin_secure_gui=false
     ############################################
     ## Settings for splitting read and writes ##
     ############################################
@@ -231,6 +237,18 @@ maxscaleConfigurationMaster: |-
     type=service
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
+    transaction_replay=true
+    transaction_replay_max_size=128M
+    transaction_replay_attempts=10
+    transaction_replay_retry_on_deadlock=true
+    slave_selection_criteria=ADAPTIVE_ROUTING
+    master_accepts_reads=true
+    master_reconnection=true
+    master_failure_mode=error_on_write
+    delayed_retry=true
+    delayed_retry_timeout=60s
+    causal_reads=global
+    causal_reads_timeout=3s
     #version_string=$MAX_SERVER
     [MasterOnly-Listener]
     address=$MASTER_ONLY_LISTEN_ADDRESS
@@ -253,6 +271,10 @@ maxscaleConfigurationMaster: |-
     backend_write_timeout=4s
     backend_read_timeout=2s
     monitor_interval=2500ms
+    enforce_simple_topology=true
+    enforce_writable_master=true
+    enforce_read_only_slaves=true
+    verify_master_failure=true
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
@@ -317,6 +339,12 @@ maxscaleConfigurationPassive: |-
     log_debug=off
     # Enable the setting of making this a active / passive cluster
     passive=true
+    rebalance_period=10s
+    admin_enabled=1
+    admin_auth=1
+    admin_host=0.0.0.0
+    admin_gui=1
+    admin_secure_gui=false
     ############################################
     ## Settings for splitting read and writes ##
     ############################################
@@ -327,6 +355,18 @@ maxscaleConfigurationPassive: |-
     type=service
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
+    transaction_replay=true
+    transaction_replay_max_size=128M
+    transaction_replay_attempts=10
+    transaction_replay_retry_on_deadlock=true
+    slave_selection_criteria=ADAPTIVE_ROUTING
+    master_accepts_reads=true
+    master_reconnection=true
+    master_failure_mode=error_on_write
+    delayed_retry=true
+    delayed_retry_timeout=60s
+    causal_reads=global
+    causal_reads_timeout=3s
     # Set a Version Name to identify a host
     #version_string=$MAX_SERVER
     [ReadWriteSplit-Listener]
@@ -368,6 +408,10 @@ maxscaleConfigurationPassive: |-
     backend_write_timeout=4s
     backend_read_timeout=2s
     monitor_interval=2500ms
+    enforce_simple_topology=true
+    enforce_writable_master=true
+    enforce_read_only_slaves=true
+    verify_master_failure=true
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
@@ -510,6 +554,11 @@ maxscale:
     port: 3307
     name: rwsplit
     targetPort: 3307
+  guiService:
+    type: NodePort
+    port: 8989
+    name: gui
+    targetPort: 8989
   replicaCount: 2
   metrics:
     enabled: false
