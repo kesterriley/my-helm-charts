@@ -122,8 +122,6 @@ maxscaleConfigurationMaster: |-
     log_notice=on
     # Enable or disable the logging of messages whose syslog priority is warning
     log_warning=on
-    # Enable or disable the logging of messages whose syslog priority is debug
-    log_debug=on
     rebalance_period=10s
     admin_enabled=1
     admin_auth=1
@@ -147,7 +145,6 @@ maxscaleConfigurationMaster: |-
     transaction_replay_attempts=10
     transaction_replay_retry_on_deadlock=true
     slave_selection_criteria=ADAPTIVE_ROUTING
-    master_accepts_reads=true
     master_reconnection=true
     master_failure_mode=error_on_write
     delayed_retry=true
@@ -258,8 +255,6 @@ maxscaleConfigurationPassive: |-
     log_notice=on
     # Enable or disable the logging of messages whose syslog priority is warning
     log_warning=on
-    # Enable or disable the logging of messages whose syslog priority is debug
-    log_debug=on
     passive=true
     rebalance_period=10s
     admin_enabled=1
@@ -284,7 +279,6 @@ maxscaleConfigurationPassive: |-
     transaction_replay_attempts=10
     transaction_replay_retry_on_deadlock=true
     slave_selection_criteria=ADAPTIVE_ROUTING
-    master_accepts_reads=true
     master_reconnection=true
     master_failure_mode=error_on_write
     delayed_retry=true
