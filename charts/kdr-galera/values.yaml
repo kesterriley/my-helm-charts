@@ -268,10 +268,6 @@ maxscaleConfigurationMaster: |-
     backend_write_timeout=4s
     backend_read_timeout=2s
     monitor_interval=2500ms
-    enforce_simple_topology=true
-    enforce_writable_master=true
-    enforce_read_only_slaves=true
-    verify_master_failure=true
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
@@ -402,10 +398,6 @@ maxscaleConfigurationPassive: |-
     backend_write_timeout=4s
     backend_read_timeout=2s
     monitor_interval=2500ms
-    enforce_simple_topology=true
-    enforce_writable_master=true
-    enforce_read_only_slaves=true
-    verify_master_failure=true
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
     ################################
     ## List of Servers referenced ##
