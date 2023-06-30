@@ -218,6 +218,18 @@ maxscaleConfigurationMaster: |-
     type=service
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
+    transaction_replay=true
+    transaction_replay_max_size=128M
+    transaction_replay_attempts=10
+    transaction_replay_retry_on_deadlock=true
+    slave_selection_criteria=ADAPTIVE_ROUTING
+    master_accepts_reads=true
+    master_reconnection=true
+    master_failure_mode=error_on_write
+    delayed_retry=true
+    delayed_retry_timeout=60s
+    causal_reads=global
+    causal_reads_timeout=3s  
     # Set a Version Name to identify a host
     #version_string=$MAX_SERVER
     [ReadWriteSplit-Listener]
@@ -237,18 +249,6 @@ maxscaleConfigurationMaster: |-
     type=service
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
-    transaction_replay=true
-    transaction_replay_max_size=128M
-    transaction_replay_attempts=10
-    transaction_replay_retry_on_deadlock=true
-    slave_selection_criteria=ADAPTIVE_ROUTING
-    master_accepts_reads=true
-    master_reconnection=true
-    master_failure_mode=error_on_write
-    delayed_retry=true
-    delayed_retry_timeout=60s
-    causal_reads=global
-    causal_reads_timeout=3s
     #version_string=$MAX_SERVER
     [MasterOnly-Listener]
     address=$MASTER_ONLY_LISTEN_ADDRESS
