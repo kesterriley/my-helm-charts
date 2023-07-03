@@ -101,6 +101,14 @@ kubectl get svc -n uk
 
 Once you have identified the port you can link to it via your local computer.
 
+To browse to MaxScale Gui
+
+```
+kubectl port-forward svc/ukdc-kdr-galera-gui -n uk 8989:8989
+```
+
+then http://localhost:8989 
+
 In Terminal A:
 
 ```

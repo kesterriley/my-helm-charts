@@ -23,8 +23,62 @@ and in another terminal kill a pod
 
 kubectl delete pods kdr-galera-maxscale-active-864588545d-qk25r
 
-login in to maxscle server and do watch maxctrl list services
+login in to maxscale server and do watch maxctrl list services
 
+
+# MaxScale Gui
+
+``` 
+kubectl port-forward svc/ukdc-kdr-galera-gui -n uk 8989:8989
+```
+
+To test with sysbench
+
+On Terminal A:
+
+```
+kubectl port-forward svc/ukdc-kdr-galera-rwsplit -n uk 3307:3307
+```
+
+On Terminal B:
+
+```
+
+mariadb -uMARIADB_USER -pmariadb -hlocalhost -P3307 -e "CREATE DATABASE sbtest"
+
+sysbench oltp_common \
+  --mysql-user=MARIADB_USER \
+	--mysql-password=mariadb \
+	--mysql-db=sbtest \
+	--mysql-port=3307 \
+	--mysql-host=127.0.0.1 \
+	--db-driver=mysql \
+	--table-size=100000 \
+	prepare
+
+sysbench oltp_read_write \
+  --time=60 \
+  --mysql-user=MARIADB_USER \
+	--mysql-password=mariadb \
+	--mysql-db=sbtest \
+	--mysql-port=3307 \
+	--mysql-host=127.0.0.1 \
+	--db-driver=mysql \
+	--threads=10 \
+	--report-interval=1 \
+	--table-size=100000 \
+	run
+	
+	
+	sysbench oltp_common --mysql-user=MARIADB_USER \
+	--mysql-password=mariadb \
+	--mysql-db=sbtest \
+	--mysql-port=3307 \
+	--mysql-host=127.0.0.1 \
+	--db-driver=mysql \
+	 cleanup
+
+```
 
 # Cron failedJobsHistoryLimit
 kubectl get cronjob -n uk
