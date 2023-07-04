@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   registry: docker.io
-  repository: kesterriley/mdb-test-10-4-server
+  repository: kesterriley/mdb-test-10-6-server
   tag: latest
   pullPolicy: Always
 
@@ -403,7 +403,7 @@ maxscale:
   passive: true
   image:
     registry: docker.io
-    repository: kesterriley/mdb-test-10-4-maxscale
+    repository: kesterriley/mdb-test-23-02-2-maxscale
     tag: latest
     pullPolicy: Always
   masterOnlyService:

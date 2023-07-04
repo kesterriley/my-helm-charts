@@ -101,10 +101,16 @@ kubectl get svc -n uk
 
 Once you have identified the port you can link to it via your local computer.
 
-To browse to MaxScale Gui
+To browse to MaxScale Gui - Galera
 
 ```
 kubectl port-forward svc/ukdc-kdr-galera-gui -n uk 8989:8989
+```
+
+or for Repliction -- 
+
+```
+kubectl port-forward svc/gui -n uk 8989:8989
 ```
 
 then http://localhost:8989 
@@ -118,7 +124,7 @@ kubectl port-forward svc/masteronly -n uk 3306:3306
 and in Terminal B:
 
 ```
-mariadb -u<user> -p<password> -h127.0.0.1 -P3306 -e "select @@hostname, @@server_id;"
+mariadb -uMARIADB_USER -pmariadb -h127.0.0.1 -P3306 -e "select @@hostname, @@server_id;"
 ```
 
 You can run the same thing but on a read write split service.
@@ -132,7 +138,7 @@ kubectl port-forward svc/rwsplit -n uk 3307:3307
 and in Terminal B:
 
 ```
-mariadb -u<user> -p<password> -h127.0.0.1 -P3307 -e "select @@hostname, @@server_id;"
+mariadb -uMARIADB_USER -pmariadb -h127.0.0.1 -P3307 -e "select @@hostname, @@server_id;"
 ```
 
 ### Port Connections
