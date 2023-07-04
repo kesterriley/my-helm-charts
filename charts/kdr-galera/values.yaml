@@ -261,13 +261,13 @@ maxscaleConfigurationMaster: |-
     servers=db1,db2,db3
     type=monitor
     use_priority=true
+    available_when_donor=true
     disable_master_failback=true
     backend_connect_timeout=6s
     backend_write_timeout=4s
     backend_read_timeout=2s
     monitor_interval=2500ms
     script=/usr/local/bin/maxscale_notify.sh --initiator=$INITIATOR --parent=$PARENT --children=$CHILDREN --event=$EVENT --node_list=$NODELIST --list=$LIST --master_list=$MASTERLIST --slave_list=$SLAVELIST --synced_list=$SYNCEDLIST
-    cooperative_monitoring_locks=majority_of_all
     ################################
     ## List of Servers referenced ##
     ################################
