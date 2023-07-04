@@ -185,9 +185,9 @@ maxscaleConfigurationMaster: |-
     monitor_interval=1000ms
     servers=db1,db2,db3
     type=monitor
-    backend_connect_timeout=2
-    backend_write_timeout=4
-    backend_read_timeout=2
+    backend_connect_timeout=2s
+    backend_write_timeout=4s
+    backend_read_timeout=2s
     replication_user=$REPLICATION_USER
     replication_password=$REPLICATION_USER_PASSWORD
     auto_failover=true
@@ -318,9 +318,9 @@ maxscaleConfigurationPassive: |-
     monitor_interval=1000ms
     servers=db1,db2,db3
     type=monitor
-    backend_connect_timeout=2
-    backend_write_timeout=4
-    backend_read_timeout=2
+    backend_connect_timeout=2s
+    backend_write_timeout=4s
+    backend_read_timeout=2s
     replication_user=$REPLICATION_USER
     replication_password=$REPLICATION_USER_PASSWORD
     auto_failover=true
