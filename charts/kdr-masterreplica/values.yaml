@@ -193,7 +193,6 @@ maxscaleConfigurationMaster: |-
     auto_failover=true
     auto_rejoin=true
     enforce_simple_topology=true
-    enforce_writable_master=true
     enforce_read_only_slaves=true
     verify_master_failure=true
     ################################
@@ -327,7 +326,6 @@ maxscaleConfigurationPassive: |-
     auto_failover=true
     auto_rejoin=true
     enforce_simple_topology=true
-    enforce_writable_master=true
     enforce_read_only_slaves=true
     verify_master_failure=true
     ################################
