@@ -51,17 +51,3 @@ spec:
     matchLabels:
       app: {{ template "kdr-masterreplica.fullname" . }}
       podindex: "2"
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: mariadb-{{ template "kdr-masterreplica.fullname" . }}-pvc
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  accessModes:
-    - ReadWriteMany
-  selector:
-    matchLabels:
-      volume: {{ template "kdr-masterreplica.fullname" . }}-pvc

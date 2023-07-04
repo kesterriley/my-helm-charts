@@ -191,7 +191,7 @@ maxscaleConfigurationMaster: |-
     # Enable or disable the substitution of environment variables in the MaxScale configuration file
     substitute_variables=true
     # Send output to Syslog 0 Disabled / 1 Enabled
-    syslog=0
+    syslog=1
     # The number of worker threads that are handling the events coming from the kernel.
     threads=auto
     # Enable or disable the logging of messages whose syslog priority is info
