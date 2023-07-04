@@ -47,8 +47,6 @@ spec:
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS
               value: 0.0.0.0
-            - name: MAX_SERVER
-              value: "Active"
             - name: DB1_ADDRESS
               value: {{ template "kdr-galera.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB2_ADDRESS
@@ -133,4 +131,4 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-master
+            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration

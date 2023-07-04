@@ -18,7 +18,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-master
+  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration
   #namespace: kdr-galera
   labels: {{- include "kdr-galera.labels" . | nindent 4 }}
 data:
@@ -27,21 +27,5 @@ data:
 {{- else if .Values.maxscaleConfigurationMaster }}
   maxscale.cnf: |
 {{ .Values.maxscaleConfigurationMaster | indent 4 }}
-{{- end }}
-{{ end }}
-{{ if and (or (.Files.Glob "files/my.cnf") .Values.maxscaleConfigurationPassive) (not .Values.configurationConfigMap) }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-passive
-  #namespace: kdr-galera
-  labels: {{- include "kdr-galera.labels" . | nindent 4 }}
-data:
-{{- if (.Files.Glob "files/my.cnf") }}
-{{ (.Files.Glob "files/my.cnf").AsConfig | indent 2 }}
-{{- else if .Values.maxscaleConfigurationPassive }}
-  maxscale.cnf: |
-{{ .Values.maxscaleConfigurationPassive | indent 4 }}
 {{- end }}
 {{ end }}

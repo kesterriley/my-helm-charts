@@ -47,10 +47,6 @@ spec:
               value: {{ template "kdr-galera.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: MONITOR_USER
               value: {{ .Values.maxscale.monitorUser }}
-            - name: MAX_PASSIVE
-              value: "true"
-            - name: MAX_SERVER
-              value: "Passive"
             - name: MARIADB_USER
               valueFrom:
                 secretKeyRef:
@@ -129,4 +125,4 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration-passive
+            name: {{ template "kdr-galera.fullname" . }}-maxscale-configuration
