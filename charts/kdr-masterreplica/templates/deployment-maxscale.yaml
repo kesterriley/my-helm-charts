@@ -77,8 +77,6 @@ spec:
               value: 0.0.0.0
             - name: READ_WRITE_LISTEN_ADDRESS
               value: 0.0.0.0
-            - name: MAX_SERVER
-              value: "Active"
             - name: DB1_ADDRESS
               value: {{ template "kdr-masterreplica.fullname" . }}-0
               # value: {{ template "kdr-masterreplica.fullname" . }}-0.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
@@ -125,7 +123,7 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration-master
+            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration
 {{- if .Values.maxscale.passive }}
 ---
 apiVersion: apps/v1
@@ -212,10 +210,6 @@ spec:
               value: {{ template "kdr-masterreplica.fullname" . }}-1.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
             - name: DB3_ADDRESS
               value: {{ template "kdr-masterreplica.fullname" . }}-2.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
-            - name: MAX_PASSIVE
-              value: "true"
-            - name: MAX_SERVER
-              value: "Passive"
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}
@@ -253,6 +247,6 @@ spec:
       volumes:
         - name: "config"
           configMap:
-            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration-passive
+            name: {{ template "kdr-masterreplica.fullname" . }}-maxscale-configuration
 {{- end }}
 {{- end }}

@@ -139,7 +139,6 @@ maxscaleConfigurationMaster: |-
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
     # Set a Version Name to identify a host
-    #version_string=$MAX_SERVER
     transaction_replay=true
     transaction_replay_max_size=128M
     transaction_replay_attempts=10
@@ -168,7 +167,6 @@ maxscaleConfigurationMaster: |-
     type=service
     user=$MAXSCALE_USER
     password=$MAXSCALE_USER_PASSWORD
-    #version_string=$MAX_SERVER
     [MasterOnly-Listener]
     address=$MASTER_ONLY_LISTEN_ADDRESS
     port=$MASTER_ONLY_PORT
@@ -195,139 +193,7 @@ maxscaleConfigurationMaster: |-
     enforce_simple_topology=true
     enforce_read_only_slaves=true
     verify_master_failure=true
-    ################################
-    ## List of Servers referenced ##
-    ################################
-    [db1]
-    type=server
-    address=$DB1_ADDRESS
-    port=$DB1_PORT
-    protocol=MariaDBBackend
-    priority=$DB1_PRIO
-    [db2]
-    type=server
-    address=$DB2_ADDRESS
-    port=$DB2_PORT
-    protocol=MariaDBBackend
-    priority=$DB2_PRIO
-    [db3]
-    type=server
-    address=$DB3_ADDRESS
-    port=$DB3_PORT
-    protocol=MariaDBBackend
-    priority=$DB3_PRIO
-    #############################
-    ## Used for Binlog Routing ##
-    #############################
-    #[BinlogRouting-Service]
-    #type=service
-    #servers=db1,db2,db3
-    #router=binlogrouter
-    #user=$MAXSCALE_USER
-    #password=$MAXSCALE_USER_PASSWORD
-    #server_id=1001003
-    #binlogdir=/var/lib/maxscale/
-    #heartbeat=60
-    #burstsize=1M
-    #[BinlogRouting-Listener]
-    #type=listener
-    #service=BinlogRouting-Service
-    #protocol=$BINLOG_PROTOCOL
-    #port=$BINLOG_PORT
-
-maxscaleConfigurationPassive: |-
-    ###############################################
-    ## MaxScale configuration for Galera Cluster ##
-    ## Kester Riley <kester.riley@mariadb.com>   ##
-    ## March 2020                                ##
-    ###############################################
-    [MaxScale]
-    # Enable or disable the substitution of environment variables in the MaxScale configuration file
-    substitute_variables=true
-    # Send output to Syslog 0 Disabled / 1 Enabled
-    syslog=0
-    # The number of worker threads that are handling the events coming from the kernel.
-    threads=auto
-    # Enable or disable the logging of messages whose syslog priority is info
-    log_info=off
-    # Enable or disable the logging of messages whose syslog priority is notice
-    log_notice=on
-    # Enable or disable the logging of messages whose syslog priority is warning
-    log_warning=on
-    passive=true
-    rebalance_period=10s
-    admin_enabled=1
-    admin_auth=1
-    admin_host=0.0.0.0
-    admin_gui=1
-    admin_secure_gui=false
-    ############################################
-    ## Settings for splitting read and writes ##
-    ############################################
-    [ReadWriteSplit-Service]
-    localhost_match_wildcard_host=1
-    router=readwritesplit
-    servers=db1,db2,db3
-    type=service
-    user=$MAXSCALE_USER
-    password=$MAXSCALE_USER_PASSWORD
-    # Set a Version Name to identify a host
-    #version_string=$MAX_SERVER
-    transaction_replay=true
-    transaction_replay_max_size=128M
-    transaction_replay_attempts=10
-    transaction_replay_retry_on_deadlock=true
-    slave_selection_criteria=ADAPTIVE_ROUTING
-    master_reconnection=true
-    master_failure_mode=error_on_write
-    delayed_retry=true
-    delayed_retry_timeout=60s
-    causal_reads=global
-    causal_reads_timeout=3s
-    [ReadWriteSplit-Listener]
-    address=$READ_WRITE_LISTEN_ADDRESS
-    port=$READ_WRITE_PORT
-    protocol=$READ_WRITE_PROTOCOL
-    service=ReadWriteSplit-Service
-    type=listener
-    ####################################################
-    ## Settings for sending all traffic to the master ##
-    ####################################################
-    [MasterOnly-Service]
-    localhost_match_wildcard_host=1
-    router_options=master
-    router=readconnroute
-    servers=db1,db2,db3
-    type=service
-    user=$MAXSCALE_USER
-    password=$MAXSCALE_USER_PASSWORD
-    #version_string=$MAX_SERVER
-    [MasterOnly-Listener]
-    address=$MASTER_ONLY_LISTEN_ADDRESS
-    port=$MASTER_ONLY_PORT
-    protocol=$MASTER_ONLY_PROTOCOL
-    service=MasterOnly-Service
-    type=listener
-    ################################
-    ## Monitor for MariaDB DB     ##
-    ################################
-    [MariaDB-Monitor]
-    module=mariadbmon
-    user=$MAXSCALE_MONITOR_USER
-    password=$MAXSCALE_MONITOR_USER_PASSWORD
-    monitor_interval=1000ms
-    servers=db1,db2,db3
-    type=monitor
-    backend_connect_timeout=2s
-    backend_write_timeout=4s
-    backend_read_timeout=2s
-    replication_user=$REPLICATION_USER
-    replication_password=$REPLICATION_USER_PASSWORD
-    auto_failover=true
-    auto_rejoin=true
-    enforce_simple_topology=true
-    enforce_read_only_slaves=true
-    verify_master_failure=true
+    cooperative_monitoring_locks=majority_of_all
     ################################
     ## List of Servers referenced ##
     ################################
