@@ -10,7 +10,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  {{ include "kdr-galera.storageClass" . }}
+  {{ include "kdr-masterreplica.storageClass" . }}
   selector:
     matchLabels:
       app: {{ template "kdr-masterreplica.fullname" . }}
@@ -28,7 +28,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  {{ include "kdr-galera.storageClass" . }}
+  {{ include "kdr-masterreplica.storageClass" . }}
   selector:
     matchLabels:
       app: {{ template "kdr-masterreplica.fullname" . }}
@@ -46,7 +46,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size | quote }}
-  {{ include "kdr-galera.storageClass" . }}
+  {{ include "kdr-masterreplica.storageClass" . }}
   selector:
     matchLabels:
       app: {{ template "kdr-masterreplica.fullname" . }}
