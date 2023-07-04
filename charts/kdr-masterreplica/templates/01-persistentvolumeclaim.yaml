@@ -1,0 +1,67 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ template "kdr-masterreplica.fullname" . }}-0
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ template "kdr-masterreplica.fullname" . }}
+      podindex: "0"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ template "kdr-masterreplica.fullname" . }}-1
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ template "kdr-masterreplica.fullname" . }}
+      podindex: "1"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: datadir-{{ template "kdr-masterreplica.fullname" . }}-2
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+      - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{ include "kdr-galera.storageClass" . }}
+  selector:
+    matchLabels:
+      app: {{ template "kdr-masterreplica.fullname" . }}
+      podindex: "2"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mariadb-{{ template "kdr-masterreplica.fullname" . }}-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  selector:
+    matchLabels:
+      volume: {{ template "kdr-masterreplica.fullname" . }}-pvc
