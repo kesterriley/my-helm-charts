@@ -87,6 +87,8 @@ spec:
                 secretKeyRef:
                   name: {{ template "kdr-galera.fullname" . }}-secrets
                   key: REPLICATION_USER_PASSWORD
+            - name: MAXSCALE_PASSIVE
+              value: "true"
           ports:
             - name: {{ .Values.maxscale.masterOnlyService.name }}
               containerPort: {{ .Values.maxscale.masterOnlyService.port }}
