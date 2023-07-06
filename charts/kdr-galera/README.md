@@ -40,6 +40,12 @@ On Terminal A:
 kubectl port-forward svc/ukdc-kdr-galera-rwsplit -n uk 3307:3307
 ```
 
+or for Async replication:
+
+```
+kubectl port-forward svc/rwsplit -n uk 3307:3307
+```
+
 On Terminal B:
 
 ```
