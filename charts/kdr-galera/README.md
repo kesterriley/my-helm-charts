@@ -54,12 +54,13 @@ mariadb -uMARIADB_USER -pmariadb -hlocalhost -P3307 -e "CREATE DATABASE sbtest"
 
 sysbench oltp_common \
   --mysql-user=MARIADB_USER \
-	--mysql-password=mariadb \
+  --mysql-password=mariadb \
 	--mysql-db=sbtest \
 	--mysql-port=3307 \
 	--mysql-host=127.0.0.1 \
 	--db-driver=mysql \
 	--table-size=100000 \
+	--tables=16 \
 	prepare
 
 sysbench oltp_read_write \
@@ -73,6 +74,8 @@ sysbench oltp_read_write \
 	--threads=10 \
 	--report-interval=1 \
 	--table-size=100000 \
+	--tables=16 \
+	--skip-trx=true
 	run
 	
 	
@@ -82,6 +85,7 @@ sysbench oltp_read_write \
 	--mysql-port=3307 \
 	--mysql-host=127.0.0.1 \
 	--db-driver=mysql \
+	--tables=16 \
 	 cleanup
 
 ```
